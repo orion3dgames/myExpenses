@@ -1,0 +1,9 @@
+<ion-view view-title="{{'TABS_NAME_MEMBERS' | translate}}">
+    <ion-content>
+        <ion-list>
+            <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.id}}">
+                <span class="item-title">{{member.firstnane}}</span>
+            </ion-item>
+        </ion-list> 
+    </ion-content>
+</ion-view>

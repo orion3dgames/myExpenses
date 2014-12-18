@@ -1,0 +1,23 @@
+<ion-view view-title="{{'TABS_NAME_SETTINGS'| translate}}">
+    <ion-content>
+        <div class="list">
+            <ion-item type="item-text-wrap" href="#">
+                <span class="item-title">{{'SETTINGS_EDIT_PROFILE'| translate}}</span>
+            </ion-item>
+            <label class="item item-input item-select">
+                <div class="input-label">
+                  {{'SETTINGS_LANGUAGE'| translate}}
+                </div>
+                <select ng-options="language.name for language in languages" ng-model="selectLanguage" ng-change="updateLanguage(selectLanguage)"></select>
+            </label>
+            <ion-item type="item-text-wrap" href="#">
+                <span class="item-title">{{'SETTINGS_QUIT_HOUSE'| translate}}</span>
+            </ion-item>
+        </div>
+        <div class="padding">
+            <button class="button button-block" ng-click="logout()">
+                {{'LOGOUT'| translate}}
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

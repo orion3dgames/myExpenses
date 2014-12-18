@@ -1,0 +1,28 @@
+<ion-view view-title="{{'TABS_NAME_DASHBOARD' | translate}}" cache-view="false" >
+    <ion-content>
+        <div class="card">
+            <div class="item item-text-wrap">
+                Hello {{currentUser.firstname}} {{currentUser.surname}}
+            </div>                 
+            <div class="item item-text-wrap">
+                Your current balance : <span class="badge badge-positive">+ $20</span>
+            </div>               
+        </div>     
+        <div class="padding">
+            <h3>Latest expenses</h3>
+        </div>
+        <div class="list">
+            <div class="item">John Doe <small>Toilet Paper</small> <span class="badge badge-balanced">$8</span></div>           
+            <div class="item">Jane Doe <small>Olive Oil</small> <span class="badge badge-balanced">$5</span></div>           
+        </div>
+        <div class="padding">
+            <h3>Members</h3>
+        </div>
+        <ion-list>
+            <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.id}}">
+                <span class="item-title">{{member.firstnane}}</span>
+            </ion-item>
+        </ion-list>
+
+    </ion-content>
+</ion-view>
