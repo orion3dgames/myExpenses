@@ -9,7 +9,7 @@ I'm sharing this project because there is a lack of finished open source app usi
 
 I will be updating this regularly, and more than appreciate anybody helping out and contributing to this project.
 
-ATTENTION : This application is by no means finished and is n ongoing project. :)
+**ATTENTION** : This application is by no means finished and is an ongoing project. :)
 
 ## Installing
 
