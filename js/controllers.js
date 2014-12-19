@@ -151,8 +151,8 @@ angular.module('starter.controllers', [])
                     admin: $rootScope.authData.password.email,
                     created: Date.now(),
                     updated: Date.now(),
-                    users: [$rootScope.authData.password.email]
-                    userInvited: 
+                    users: [$rootScope.authData.password.email],
+                    userInvited: []
                 };
                 
                 /* SAVE HOUSE DATA */
