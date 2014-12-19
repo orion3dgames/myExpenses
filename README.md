@@ -11,6 +11,11 @@ I will be updating this regularly, and more than appreciate anybody helping out 
 
 **ATTENTION** : This application is by no means finished and is an ongoing project. :)
 
+## Features
+- Login / Register via Firebase AUTH
+- Basic Navigation
+- Lot's more to come
+
 ## Installing
 
 To install and preview this app on your phone
