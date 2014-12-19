@@ -1,5 +1,4 @@
 # myExpenses
-===============================
 
 A demo app using Firebase and Ionic to create a sharing roomies expense app.
 
