@@ -2,7 +2,7 @@
 
 A demo app using Firebase and Ionic to create a sharing roomies expense app.
 
-You can view a demo  here : [WEB DEMO]:
+You can view a demo  here : [WEB DEMO]
 
 I'm sharing this project because there is a lack of finished open source app using IONIC.
 
