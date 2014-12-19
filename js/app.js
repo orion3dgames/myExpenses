@@ -39,8 +39,10 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     'email':'janedoe@gmail.com'
                 }];
                 
-                $rootScope.currentUser = false;
-                $rootScope.authData = false;
+                $rootScope.currentUser = {};
+                $rootScope.currentHouse = {};
+                $rootScope.isAdmin = false;
+                $rootScope.authData = {};
                 //$rootScope.checkSession();
                 
             });
@@ -90,7 +92,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 SETTINGS_QUIT_HOUSE: "Quitter cette maison"
                 
             });
-            $translateProvider.preferredLanguage("fr");
+            $translateProvider.preferredLanguage("en");
             $translateProvider.fallbackLanguage("en");
             
             /************************************/

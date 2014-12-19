@@ -3,13 +3,15 @@ angular.module('starter.controllers', [])
         .controller('SignInCtrl', function ($scope, $rootScope, $state, $ionicHistory, fireBaseData, $firebase) {
 
             $scope.hideBackButton = true;
+    
+            /* FOR DEV PURPOSES */
             $scope.user = {
                 email: "johndoe@gmail.com",
                 password: "password"
             };
             
             $scope.signIn = function (user) {
-                /* Show Loading*/
+
                 $rootScope.show('Logging In...');
                 
                 /* Check user fields*/
@@ -37,7 +39,8 @@ angular.module('starter.controllers', [])
 
         .controller('RegisterCtrl', function ($scope, $rootScope, $state, $firebase, fireBaseData, $firebaseAuth) {
             $scope.hideBackButton = true;
-    
+            
+            /* FOR DEV PURPOSES */
             $scope.user = {
                 firstname: "John",
                 surname: "Doe",
@@ -79,11 +82,10 @@ angular.module('starter.controllers', [])
                     /* SAVE PROFILE DATA */
                     var usersRef = fireBaseData.refRoomMates();
                     var myUser = usersRef.child(escapeEmailAddress(user.email));
-                    myUser.set($scope.temp);
-                    
-                    $rootScope.hide();
-                    $rootScope.currentUser = $scope.temp;
-                    $state.go('introduction'); 
+                    myUser.set($scope.temp, function(){
+                        $rootScope.hide();
+                        $state.go('introduction'); 
+                    }); 
                     
                 }).catch(function (error) {
                     if (error.code == 'INVALID_EMAIL') {
@@ -114,37 +116,51 @@ angular.module('starter.controllers', [])
             };
         })
 
-        .controller('RegisterHouseCtrl', function ($scope, $state, $ionicHistory, fireBaseData, $rootScope) {
+        .controller('RegisterHouseCtrl', function ($scope, $state, $ionicHistory, fireBaseData, $firebase, $rootScope) {
             
             $ionicHistory.clearHistory();
             $scope.hideBackButton = true;
             
+            /* FOR DEV PURPOSES */
             $scope.house = {
                 name: "Crunchy Town",
-                currency: "AUD",
-                created: Date.now(),
-                updated: Date.now()
+                currency: "AUD"
             };
             
             $scope.createHouse = function (house) {
-                $rootScope.show('Creating...');
                 
+                $rootScope.show('Creating...');
                 var house_name = house.name;
                 var house_currency = house.currency;
                 
-                /* Check user fields*/
+                /* VERIFY USER FIELD */
                 if(!house_name || !house_currency){
                     $rootScope.hide();
                     $rootScope.alertPopup('Error','Please fill in the fields correctly');
                     return;
                 }
                 
-                /* SAVE HOUSE DATA */
-                var housesRef = fireBaseData.refHouses();
-                var myHouse = housesRef.child(house_name);
-                myHouse.set($scope.house);
+                /* GET CURRENT USER */
+                var ref = fireBaseData.ref();
+                $rootScope.authData = ref.getAuth();
                 
-                $rootScope.hide();
+                /* PREPARE DATA */
+                $scope.temp = {
+                    name: house_name,
+                    currency: house_currency,
+                    admin: $rootScope.authData.password.email,
+                    created: Date.now(),
+                    updated: Date.now()
+                };
+                
+                /* SAVE HOUSE DATA */
+                var myHouses = fireBaseData.refHouses();
+                var sync = $firebase(myHouses);
+                sync.$push($scope.temp).then(function(newChildRef) {
+                    $rootScope.hide();
+                    $state.go('tabs.dashboard'); 
+                });
+
             };
             
         })
@@ -157,6 +173,7 @@ angular.module('starter.controllers', [])
         .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData) {
             $rootScope.refreshData();
             $scope.currentUser = $rootScope.currentUser;
+            $scope.currentHouse = $rootScope.currentHouse;
         })
 
         .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory) {

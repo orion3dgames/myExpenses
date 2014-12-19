@@ -13,6 +13,7 @@ I will be updating this regularly, and more than appreciate anybody helping out 
 ## Features
 - Login / Register via Firebase AUTH
 - Basic Navigation
+- Translate Integrated (English / French atm, but you can add many more.) 
 - Lot's more to come
 
 ## Installing

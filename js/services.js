@@ -48,9 +48,21 @@ angular.module('starter.services', [])
                 $rootScope.authData = ref.getAuth();
                 if ($rootScope.authData) {
                     var user_email = $rootScope.authData.password.email;
+                    
+                    /* GET USER DATA */
                     var usersRef = new Firebase("https://myexpenses.firebaseio.com/roommates").child(escapeEmailAddress(user_email));
-                    var sync = $firebase(usersRef);
-                    $rootScope.currentUser = sync.$asObject();
+                    var userSync = $firebase(usersRef);
+                    $rootScope.currentUser = userSync.$asObject();
+                    
+                    /* GET HOUSE DATA*/
+                    /*
+                    var housesRef = new Firebase("https://myexpenses.firebaseio.com/houses");
+                    housesRef.once('value', function(snap) {
+                        console.log( snap.val() );
+                    });
+                    
+                    $rootScope.currentHouse = houseSync.$asObject();
+                    */
                     $rootScope.hide();
                    
                 }else{
