@@ -1,0 +1,18 @@
+<ion-view view-title="Add Member" cache-view="false">
+    <ion-content>
+        <div class="padding">
+            <p>Just enter the email of the new person in your house and we will send an email with all the details about joining your house.</p>
+        </div>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Email</span>
+                <input type="text" ng-model="email">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive" ng-click="addamember(email)">
+                Send Invitation
+            </button>
+        </div>
+    </ion-content>
+</ion-view>

@@ -39,11 +39,8 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     'email':'janedoe@gmail.com'
                 }];
                 
-                $rootScope.currentUser = {};
-                $rootScope.currentHouse = {};
                 $rootScope.isAdmin = false;
                 $rootScope.authData = {};
-                //$rootScope.checkSession();
                 
             });
             
@@ -123,6 +120,11 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         templateUrl: 'templates/intro/register-house.html',
                         controller: 'RegisterHouseCtrl'
                     })
+                    .state('join-house', {
+                        url: '/',
+                        templateUrl: 'templates/intro/join-house.html',
+                        controller: 'JoinHouseCtrl'
+                    })
 
                     /* ONCE LOGGED IN */
                     .state('tabs', {
@@ -137,6 +139,15 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                             'tab-dashboard': {
                                 templateUrl: 'templates/tabs/dashboard.html',
                                 controller: 'DashboardCtrl'
+                            }
+                        }
+                    })
+                    .state('tabs.addamember', {
+                        url: '/addamember',
+                        views: {
+                            'tab-dashboard': {
+                                templateUrl: 'templates/tabs/add-member.html',
+                                controller: 'AddMemberCtrl'
                             }
                         }
                     })

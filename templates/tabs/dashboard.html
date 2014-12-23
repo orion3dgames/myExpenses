@@ -1,4 +1,4 @@
-<ion-view view-title="{{'TABS_NAME_DASHBOARD' | translate}} | {{currentHouse.name}}" cache-view="false" >
+<ion-view view-title="{{'TABS_NAME_DASHBOARD' | translate}} | {{currentHouse.name}}" >
     <ion-content>
         <div class="card">
             <div class="item item-text-wrap">
@@ -15,14 +15,6 @@
             <div class="item">John Doe <small>Toilet Paper</small> <span class="badge badge-balanced">$8</span></div>           
             <div class="item">Jane Doe <small>Olive Oil</small> <span class="badge badge-balanced">$5</span></div>           
         </div>
-        <div class="padding">
-            <h3>Members</h3>
-        </div>
-        <ion-list>
-            <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.id}}">
-                <span class="item-title">{{member.firstnane}}</span>
-            </ion-item>
-        </ion-list>
 
     </ion-content>
 </ion-view>

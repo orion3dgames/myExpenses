@@ -82,7 +82,7 @@ angular.module('starter.controllers', [])
                     /* SAVE PROFILE DATA */
                     var usersRef = fireBaseData.refRoomMates();
                     var myUser = usersRef.child(escapeEmailAddress(user.email));
-                    myUser.set($scope.temp, function(){
+                    myUser.update($scope.temp, function(){
                         $rootScope.hide();
                         $state.go('introduction'); 
                     }); 
@@ -114,6 +114,10 @@ angular.module('starter.controllers', [])
             $scope.joinHouse = function (user) {
                 $state.go('join-house');
             };
+        })
+
+        .controller('JoinHouseCtrl', function ($scope, $state) {
+            $state.go('tabs.dashboard'); 
         })
 
         .controller('RegisterHouseCtrl', function ($scope, $state, $ionicHistory, fireBaseData, $firebase, $rootScope) {
@@ -151,16 +155,25 @@ angular.module('starter.controllers', [])
                     admin: $rootScope.authData.password.email,
                     created: Date.now(),
                     updated: Date.now(),
-                    users: [$rootScope.authData.password.email],
-                    userInvited: []
                 };
                 
                 /* SAVE HOUSE DATA */
                 var myHouses = fireBaseData.refHouses();
                 var sync = $firebase(myHouses);
                 sync.$push($scope.temp).then(function(newChildRef) {
-                    $rootScope.hide();
-                    $state.go('tabs.dashboard'); 
+    
+                    /* UPDATE USER WITH THE HOUSE ID */
+                    $scope.temp = {
+                        houseid: newChildRef.key()
+                    };
+                    
+                    /* SAVE PROFILE DATA */
+                    var usersRef = fireBaseData.refRoomMates();
+                    var myUser = usersRef.child(escapeEmailAddress($rootScope.authData.password.email));
+                    myUser.update($scope.temp, function(){
+                        $rootScope.hide();
+                        $state.go('tabs.dashboard'); 
+                    }); 
                 });
 
             };
@@ -171,11 +184,71 @@ angular.module('starter.controllers', [])
             $ionicHistory.clearHistory();
             $scope.hideBackButton = true;
         })
+        
+        .controller('AddMemberCtrl', function ($scope,$rootScope, $state, $ionicHistory, fireBaseData) {
+            
+            
+            $rootScope.show('Updating...');
+            fireBaseData.checkAuth().then(function (authData) {
+                return fireBaseData.refreshData(authData.password.email);  
+            }).then( function(output){
+                fireBaseData.currentData = output;
+                $scope.currentUser = fireBaseData.currentData.currentUser;
+                $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                $rootScope.hide();
+                console.log(fireBaseData.currentData);
+            });
+            
+            $scope.email = "johndoe@gmail.com";
+            
+            $scope.addamember = function(email){
+                $rootScope.show('Adding...');
+                
+                $scope.temp = {
+                    email: email,
+                    houseid: fireBaseData.currentData.currentUser.houseid
+                };
+                
+                fireBaseData.checkDuplicateEmail(email).then(function(greeting) {
+                    var usersRef = fireBaseData.refRoomMates();
+                    var myUser = usersRef.child(escapeEmailAddress(email));
+                    myUser.update($scope.temp, function(){
+                        $rootScope.hide();
+                        $state.go('tabs.dashboard'); 
+                    });
+                }, function(reason) {
+                    if(reason === 'EMAIL EXIST'){
+                        $rootScope.hide();
+                        $rootScope.notify('Error','Email already exists!');
+                    }
+                });
+            };
+        })
 
         .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData) {
-            $rootScope.refreshData();
-            $scope.currentUser = $rootScope.currentUser;
-            $scope.currentHouse = $rootScope.currentHouse;
+            
+            $scope.currentUser = fireBaseData.currentData.currentUser;
+            $scope.currentHouse = fireBaseData.currentData.currentHouse;
+            $scope.isadmin = fireBaseData.currentData.isadmin;
+            
+            if(!fireBaseData.currentData){
+                $rootScope.show('Updating...');
+                fireBaseData.checkAuth().then(function (authData) {
+                    return fireBaseData.refreshData(authData.password.email);  
+                }).then( function(output){
+                    fireBaseData.currentData = output;
+                    $scope.currentUser = fireBaseData.currentData.currentUser;
+                    $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                    $scope.isadmin = fireBaseData.currentData.isadmin;
+                    $rootScope.hide();
+                    console.log(fireBaseData.currentData);
+                });
+            }
+            
+            $scope.addamember = function () {
+                $state.go('addmember'); 
+            };
+            
         })
 
         .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory) {
@@ -185,6 +258,7 @@ angular.module('starter.controllers', [])
                 $ionicHistory.clearCache();
                 fireBaseData.ref().unauth();
                 $rootScope.checkSession();
+                fireBaseData.currentData = {};
             };
             
             /* SETTINGS LANGUAGES */
@@ -195,8 +269,25 @@ angular.module('starter.controllers', [])
             };  
         })
         
-        .controller('MembersCtrl', function ($scope, $rootScope, $state) {
-            $scope.members = $rootScope.members;
+        .controller('MembersCtrl', function ($scope, $rootScope, $state, fireBaseData) {
+
+            if(!fireBaseData.currentData){
+                $rootScope.show('Updating...');
+                fireBaseData.checkAuth().then(function (authData) {
+                    return fireBaseData.refreshData(authData.password.email);  
+                }).then( function(){
+                    console.log(fireBaseData.currentData);
+                    $scope.currentUser = fireBaseData.currentData.currentUser;
+                    $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                    $scope.isadmin = fireBaseData.currentData.isadmin;
+                    $rootScope.hide();
+                });
+            }else{
+                $scope.currentUser = fireBaseData.currentData.currentUser;
+                $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                $scope.isadmin = fireBaseData.currentData.isadmin;
+            }
+           
         })
         
         .controller('MembersDetailCtrl', function ($scope, $rootScope, $state, $stateParams) {
