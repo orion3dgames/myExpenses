@@ -187,17 +187,23 @@ angular.module('starter.controllers', [])
         
         .controller('AddMemberCtrl', function ($scope,$rootScope, $state, $ionicHistory, fireBaseData) {
             
-            
-            $rootScope.show('Updating...');
-            fireBaseData.checkAuth().then(function (authData) {
-                return fireBaseData.refreshData(authData.password.email);  
-            }).then( function(output){
-                fireBaseData.currentData = output;
+            $scope.isadmin = false;
+            if(!fireBaseData.currentData){
+                $rootScope.show('Updating...');
+                fireBaseData.checkAuth().then(function (authData) {
+                    return fireBaseData.refreshData(authData.password.email);  
+                }).then( function(output){
+                    fireBaseData.currentData = output;
+                    $scope.members = $rootScope.members;
+                    $scope.isadmin = fireBaseData.currentData.isadmin;
+                    $rootScope.hide();
+                    console.log(fireBaseData.currentData);
+                });
+            }else{
                 $scope.currentUser = fireBaseData.currentData.currentUser;
                 $scope.currentHouse = fireBaseData.currentData.currentHouse;
-                $rootScope.hide();
-                console.log(fireBaseData.currentData);
-            });
+                $scope.isadmin = fireBaseData.currentData.isadmin;
+            }
             
             $scope.email = "johndoe@gmail.com";
             
@@ -227,10 +233,7 @@ angular.module('starter.controllers', [])
 
         .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData) {
             
-            $scope.currentUser = fireBaseData.currentData.currentUser;
-            $scope.currentHouse = fireBaseData.currentData.currentHouse;
-            $scope.isadmin = fireBaseData.currentData.isadmin;
-            
+            $scope.isadmin = false;
             if(!fireBaseData.currentData){
                 $rootScope.show('Updating...');
                 fireBaseData.checkAuth().then(function (authData) {
@@ -243,6 +246,10 @@ angular.module('starter.controllers', [])
                     $rootScope.hide();
                     console.log(fireBaseData.currentData);
                 });
+            }else{
+                $scope.currentUser = fireBaseData.currentData.currentUser;
+                $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                $scope.isadmin = fireBaseData.currentData.isadmin;
             }
             
             $scope.addamember = function () {
@@ -270,17 +277,18 @@ angular.module('starter.controllers', [])
         })
         
         .controller('MembersCtrl', function ($scope, $rootScope, $state, fireBaseData) {
-
+            
+            $scope.isadmin = false;
             if(!fireBaseData.currentData){
                 $rootScope.show('Updating...');
                 fireBaseData.checkAuth().then(function (authData) {
                     return fireBaseData.refreshData(authData.password.email);  
-                }).then( function(){
-                    console.log(fireBaseData.currentData);
-                    $scope.currentUser = fireBaseData.currentData.currentUser;
-                    $scope.currentHouse = fireBaseData.currentData.currentHouse;
+                }).then( function(output){
+                    fireBaseData.currentData = output;
+                    $scope.members = $rootScope.members;
                     $scope.isadmin = fireBaseData.currentData.isadmin;
                     $rootScope.hide();
+                    console.log(fireBaseData.currentData);
                 });
             }else{
                 $scope.currentUser = fireBaseData.currentData.currentUser;

@@ -10,9 +10,9 @@ angular.module('starter.services', [])
             refHouses = new Firebase("https://myexpenses.firebaseio.com/houses");
 
             var currentData = {
-                currentUser: false,  
-                currentHouse: false,  
-                idadmin: false
+                  currentUser: false,  
+                  currentHouse: false,  
+                  idadmin: false
             };
 
             $rootScope.notify = function(title,text) {
@@ -116,17 +116,17 @@ angular.module('starter.services', [])
                     return deferred.promise;
                 },
                 refreshData: function (user_email) {
+                    var output = {};
                     var deferred = $q.defer();
-                    console.log(currentData);
                     if(currentData){
                         var usersRef = refRoomMates.child(escapeEmailAddress(user_email));
                         usersRef.once("value", function(snap) {
-                            currentData.currentUser = snap.val();
-                            var housesRef = refHouses.child(currentData.currentUser.houseid);
+                            output.currentUser = snap.val();
+                            var housesRef = refHouses.child(output.currentUser.houseid);
                             housesRef.once("value", function(snap) {
-                                currentData.currentHouse = snap.val();
-                                currentData.isadmin = (currentData.currentHouse.admin === currentData.currentUser.email ? true : false); 
-                                deferred.resolve(true);
+                                output.currentHouse = snap.val();
+                                output.isadmin = (output.currentHouse.admin === output.currentUser.email ? true : false); 
+                                deferred.resolve(output);
                             });
                         });
                     }else{
