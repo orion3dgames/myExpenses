@@ -253,6 +253,24 @@ angular.module('starter.controllers', [])
             $scope.addamember = function () {
                 $state.go('addmember'); 
             };
+
+        })
+
+        .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
+            
+            $rootScope.show('...');
+            ExpensesData.getExpenses().then( function(output){
+                $rootScope.hide();
+                $scope.expenses = output;
+            });
+            $scope.doRefresh = function() {
+                $rootScope.show('...');
+                ExpensesData.getExpenses().then( function(output){
+                    $rootScope.hide();
+                    $scope.expenses = output;
+                    $scope.$broadcast('scroll.refreshComplete');
+                });  
+            };  
             
             $ionicModal.fromTemplateUrl('templates/new-expense.html', {
                 scope: $scope,
@@ -271,9 +289,12 @@ angular.module('starter.controllers', [])
             
             $scope.addExpense = function(expense) {
                 
+                var amount = expense.amount;
+                var purpose = expense.purpose;
+                
                 $rootScope.show('Adding...');
                 
-                if(!expense.amount || !expense.purpose){
+                if(!purpose || !amount){
                     $rootScope.hide();
                     $rootScope.alertPopup('Error','Please fill in the fields correctly');
                     return;
@@ -281,8 +302,8 @@ angular.module('starter.controllers', [])
                 
                 /* PREPARE DATA */
                 var temp = {
-                    amount: expense.amount,
-                    purpose: expense.purpose,
+                    amount: amount,
+                    purpose: purpose,
                     user: $rootScope.authData.password.email,
                     house_id: fireBaseData.currentData.currentHouse.id,
                     created: Date.now(),
@@ -294,22 +315,6 @@ angular.module('starter.controllers', [])
                     $scope.modal.hide();
                 }); 
             };
-        })
-
-        .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData) {
-            $rootScope.show('...');
-            ExpensesData.getExpenses().then( function(output){
-                $rootScope.hide();
-                $scope.expenses = output;
-            });
-            $scope.doRefresh = function() {
-                $rootScope.show('...');
-                ExpensesData.getExpenses().then( function(output){
-                    $rootScope.hide();
-                    $scope.expenses = output;
-                    $scope.$broadcast('scroll.refreshComplete');
-                });  
-            };  
         })
         
         .controller('MembersCtrl', function ($scope, $rootScope, UserData) {
