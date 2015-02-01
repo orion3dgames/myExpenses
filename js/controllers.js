@@ -231,14 +231,12 @@ angular.module('starter.controllers', [])
             };
         })
 
-        .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData) {
+        .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, ExpensesData,$ionicModal) {
             
             $scope.isadmin = false;
             if(!fireBaseData.currentData){
                 $rootScope.show('Updating...');
-                fireBaseData.checkAuth().then(function (authData) {
-                    return fireBaseData.refreshData(authData.password.email);  
-                }).then( function(output){
+                fireBaseData.refreshData().then( function(output){
                     fireBaseData.currentData = output;
                     $scope.currentUser = fireBaseData.currentData.currentUser;
                     $scope.currentHouse = fireBaseData.currentData.currentHouse;
@@ -255,6 +253,52 @@ angular.module('starter.controllers', [])
             $scope.addamember = function () {
                 $state.go('addmember'); 
             };
+            
+            $ionicModal.fromTemplateUrl('templates/new-expense.html', {
+                scope: $scope,
+                animation: 'slide-in-up'
+            }).then(function (modal) {
+                $scope.modal = modal;
+            });
+            
+            $scope.newExpense = function () {
+                $scope.modal.show();
+            };
+            
+            $scope.closeModal = function(expense) {
+                
+                $rootScope.show('Adding...');
+                
+                if(!expense.amount || !expense.purpose){
+                    $rootScope.hide();
+                    $rootScope.alertPopup('Error','Please fill in the fields correctly');
+                    return;
+                }
+                
+                /* PREPARE DATA */
+                var temp = {
+                    amount: expense.amount,
+                    purpose: expense.purpose,
+                    user: $rootScope.authData.password.email,
+                    house_id: fireBaseData.currentData.currentHouse.id,
+                    created: Date.now(),
+                    updated: Date.now()
+                };
+                
+                ExpensesData.addExpense(temp).then(function () {
+                    $rootScope.hide();
+                    $scope.modal.hide();
+                }); 
+            };
+        })
+
+        .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData) {
+            
+            $rootScope.show('...');
+            ExpensesData.getExpenses().then( function(output){
+                $rootScope.hide();
+                $scope.expenses = output;
+            });
             
         })
 

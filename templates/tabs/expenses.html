@@ -3,5 +3,10 @@
         <div class="padding">
             {{'TABS_NAME_EXPENSES' | translate}}
         </div>
+        <ion-list>
+            <ion-item ng-repeat="expense in expenses" type="item-text-wrap" href="#/tab/expenses/{{expense.id}}">
+                {{expense.purpose}} <span class="badge badge-balanced">${{expense.amount}}</span>
+            </ion-item>
+        </ion-list>
     </ion-content>
 </ion-view>

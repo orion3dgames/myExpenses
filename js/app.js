@@ -5,7 +5,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 'firebase', 'pascalprecht.translate'])
 
-        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, fireBaseData, $ionicScrollDelegate) {
+        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, fireBaseData, $ionicScrollDelegate,$state,Auth) {
             $ionicPlatform.ready(function () {
 
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -17,6 +17,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 /************************************/
                 /* VARIABLES                        */
                 /************************************/
+
                 $rootScope.settings = {
                     'languages' : [{
                             'prefix':'en',
@@ -27,20 +28,27 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     }] 
                 };
                 
-                $rootScope.members = [{
-                    'id':1,
-                    'firstnane':'John',
-                    'surname':'Doe',
-                    'email':'johndoe@gmail.com'
-                },{
-                    'id':2,
-                    'firstnane':'Jane',
-                    'surname':'Doe',
-                    'email':'janedoe@gmail.com'
-                }];
-                
                 $rootScope.isAdmin = false;
                 $rootScope.authData = {};
+                
+                Auth.$onAuth(function (authData) {
+                    if (authData) {
+                        console.log("Logged in as:", authData);
+                        $state.go("tabs.dashboard");
+                        $rootScope.authData = authData;
+                    } else {
+                        $rootScope.hide();
+                        $state.go("signin");
+                    }
+                });
+                
+                $rootScope.$on("$stateChangeError", function (event, toState, toParams, fromState, fromParams, error) {
+                    // We can catch the error thrown when the $requireAuth promise is rejected
+                    // and redirect the user back to the home page
+                    if (error === "AUTH_REQUIRED") {
+                        $state.go("signin");
+                    }
+                });
                 
             });
             
@@ -101,7 +109,16 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     .state('signin', {
                         url: '/sign-in',
                         templateUrl: 'templates/sign-in.html',
-                        controller: 'SignInCtrl'
+                        controller: 'SignInCtrl',
+                        resolve: {
+                            // controller will not be loaded until $waitForAuth resolves
+                            // Auth refers to our $firebaseAuth wrapper in the example above
+                            "currentAuth": ["Auth",
+                                function (Auth) {
+                                    // $waitForAuth returns a promise so the resolve waits for it to complete
+                                    return Auth.$waitForAuth();
+                                }]
+                        }
                     })
                     .state('register', {
                         url: '/register',
@@ -130,7 +147,17 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     .state('tabs', {
                         url: '/tab',
                         abstract: true,
-                        templateUrl: 'templates/tabs/tabs.html'
+                        templateUrl: 'templates/tabs/tabs.html',
+                        resolve: {
+                            // controller will not be loaded until $requireAuth resolves
+                            // Auth refers to our $firebaseAuth wrapper in the example above
+                            "currentAuth": ["Auth",
+                                function (Auth) {
+                                    // $requireAuth returns a promise so the resolve waits for it to complete
+                                    // If the promise is rejected, it will throw a $stateChangeError (see above)
+                                    return Auth.$requireAuth();
+                                }]
+                        }
                     })
 
                     .state('tabs.dashboard', {
@@ -155,7 +182,8 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         url: '/expenses',
                         views: {
                             'tab-expenses': {
-                                templateUrl: 'templates/tabs/expenses.html'
+                                templateUrl: 'templates/tabs/expenses.html',
+                                controller: 'ExpensesCtrl'
                             }
                         }
                     })
@@ -192,5 +220,5 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
             // if none of the above states are matched, use this as the fallback
             $urlRouterProvider.otherwise('/sign-in');
 
-        });
+        })
 
