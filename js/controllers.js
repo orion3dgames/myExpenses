@@ -265,7 +265,11 @@ angular.module('starter.controllers', [])
                 $scope.modal.show();
             };
             
-            $scope.closeModal = function(expense) {
+            $scope.cancelModal = function() {
+                $scope.modal.hide();
+            };
+            
+            $scope.addExpense = function(expense) {
                 
                 $rootScope.show('Adding...');
                 
