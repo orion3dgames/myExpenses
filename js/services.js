@@ -122,12 +122,45 @@ angular.module('starter.services', [])
         })
         
         
-        .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+        .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
             
-            var refExpenses = new Firebase("https://myexpenses.firebaseio.com/expenses");
+            var ref = new Firebase("https://myexpenses.firebaseio.com/roommates");
 
             return {
+               
+                getRoomMate: function (email) {
+                    console.log(email);
+                    var deferred = $q.defer();
+                    var usersRef = ref.child(escapeEmailAddress(email));
+                    console.log(usersRef);
+                    usersRef.once("value", function (snap) {
+                        deferred.resolve(snap.val());
+                    });
+                    return deferred.promise;
+                },
                 
+                getRoomMates: function (id) {
+                    var deferred = $q.defer();
+                    var output = {};
+                    ref.once('value', function (snap) {
+                        console.log(snap.val());
+                        deferred.resolve(snap.val());
+                    });
+                    return deferred.promise;
+                },
+              
+                addRoomMate: function () {
+                    
+                }     
+            }
+        })
+        
+        .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+            
+            var ref = new Firebase("https://myexpenses.firebaseio.com/expenses");
+
+            return {
+               
                 getExpense: function () {
                    
                 },
@@ -135,8 +168,7 @@ angular.module('starter.services', [])
                 getExpenses: function (id) {
                     var deferred = $q.defer();
                     var output = {};
-                    refExpenses.once('value', function (snap) {
-                        console.log('accounts matching email address', snap.val())
+                    ref.once('value', function (snap) {
                         deferred.resolve(snap.val());
                     });
                     return deferred.promise;
@@ -146,7 +178,7 @@ angular.module('starter.services', [])
                     var deferred = $q.defer();
                     var output = {};
                     
-                    var sync = $firebase(refExpenses);
+                    var sync = $firebase(ref);
                     sync.$push(expense).then(function(data) {
                         deferred.resolve(data);
                     }, function(error){
@@ -154,10 +186,8 @@ angular.module('starter.services', [])
                     });
                     
                     return deferred.promise;
-                }
-                
+                }     
             }
-
         })
    
    

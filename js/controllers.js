@@ -293,24 +293,39 @@ angular.module('starter.controllers', [])
         })
 
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData) {
-            
             $rootScope.show('...');
             ExpensesData.getExpenses().then( function(output){
                 $rootScope.hide();
                 $scope.expenses = output;
             });
-            
             $scope.doRefresh = function() {
-                
                 $rootScope.show('...');
                 ExpensesData.getExpenses().then( function(output){
                     $rootScope.hide();
                     $scope.expenses = output;
                     $scope.$broadcast('scroll.refreshComplete');
-                });
-                
-            };
-            
+                });  
+            };  
+        })
+        
+        .controller('MembersCtrl', function ($scope, $rootScope, UserData) {
+            $rootScope.show('...');
+            UserData.getRoomMates().then( function(output){
+                $rootScope.hide();
+                $scope.members = output;
+            });
+            $scope.doRefresh = function() {
+                $rootScope.show('...');
+                UserData.getRoomMates().then( function(output){
+                    $rootScope.hide();
+                    $scope.members = output;
+                    $scope.$broadcast('scroll.refreshComplete');
+                });  
+            };  
+        })
+        
+        .controller('MembersDetailCtrl', function ($scope, $rootScope, $stateParams, UserData, member) {
+            $scope.member = member;
         })
 
         .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory) {
@@ -331,34 +346,12 @@ angular.module('starter.controllers', [])
             };  
         })
         
-        .controller('MembersCtrl', function ($scope, $rootScope, $state, fireBaseData) {
-            
-            $scope.isadmin = false;
-            if(!fireBaseData.currentData){
-                $rootScope.show('Updating...');
-                fireBaseData.checkAuth().then(function (authData) {
-                    return fireBaseData.refreshData(authData.password.email);  
-                }).then( function(output){
-                    fireBaseData.currentData = output;
-                    $scope.members = $rootScope.members;
-                    $scope.isadmin = fireBaseData.currentData.isadmin;
-                    $rootScope.hide();
-                    console.log(fireBaseData.currentData);
-                });
-            }else{
-                $scope.currentUser = fireBaseData.currentData.currentUser;
-                $scope.currentHouse = fireBaseData.currentData.currentHouse;
-                $scope.isadmin = fireBaseData.currentData.isadmin;
-            }
-           
-        })
-        
-        .controller('MembersDetailCtrl', function ($scope, $rootScope, $state, $stateParams) {
-            var thisid = ($stateParams.memberId - 1);
-            $scope.member = $rootScope.members[thisid];
+        .filter('reverse', function () {
+            return function (items) {
+                return items.slice().reverse();
+            };
         });
 
-       
 function escapeEmailAddress(email) {
     if (!email)
         return false
@@ -374,3 +367,4 @@ function unescapeEmailAddress(email) {
     email = email.replace(/\,/g, '.');
     return email;
 }
+

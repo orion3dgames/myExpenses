@@ -1,11 +1,16 @@
 <ion-view view-title="{{'TABS_NAME_MEMBERS' | translate}}">
     <ion-content>
-        <div class="padding">
-            <a class="button icon icon-right ion-chevron-right" href="#/tab/addamember" ng-show="isadmin">Add a member</a>
-        </div>
+        <ion-refresher
+            pulling-text="Pull to refresh..."
+            on-refresh="doRefresh()">
+        </ion-refresher>
         <ion-list>
-            <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.id}}">
-                <span class="item-title">{{member.firstnane}}</span>
+            <ion-item type="item-text-wrap" href="#">
+                <span class="item-title">{{'TABS_NAME_MEMBERS' | translate}}</span>
+            </ion-item>
+            <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.email}}">
+                <span class="item-title">{{member.firstname}} {{member.surname}}</span>
+                <span class="item-note">{{member.email}}</span>
             </ion-item>
         </ion-list> 
     </ion-content>

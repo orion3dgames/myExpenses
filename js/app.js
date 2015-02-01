@@ -68,6 +68,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 SIGNIN: "Sign-In",
                 REGISTER: "Register",
                 LOGOUT: "Logout",
+                REGISTER_DONTHAVEACCOUNT: "I dont have an account",
                 REGISTER_ALREADYHAVEACCOUNT: "I already have an account",
                 FORM_EMAIL: "Email",
                 FORM_PASSWORD: "Password",
@@ -216,7 +217,13 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         views: {
                             'tab-members': {
                                 templateUrl: 'templates/tabs/member-detail.html',
-                                controller: 'MembersDetailCtrl'
+                                controller: 'MembersDetailCtrl',
+                                resolve: {
+                                    member: function($stateParams, UserData) {
+                                        var email = $stateParams.memberId;
+                                        return UserData.getRoomMate(email);
+                                    }
+                                }
                             }
                         }
                     });
@@ -225,4 +232,3 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
             $urlRouterProvider.otherwise('/introduction');
 
         })
-
