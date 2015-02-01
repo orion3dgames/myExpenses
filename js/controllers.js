@@ -300,6 +300,17 @@ angular.module('starter.controllers', [])
                 $scope.expenses = output;
             });
             
+            $scope.doRefresh = function() {
+                
+                $rootScope.show('...');
+                ExpensesData.getExpenses().then( function(output){
+                    $rootScope.hide();
+                    $scope.expenses = output;
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
+                
+            };
+            
         })
 
         .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory) {

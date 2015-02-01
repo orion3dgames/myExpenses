@@ -1,5 +1,8 @@
 <ion-view view-title="{{'SIGNIN' | translate}}" cache-view="false">
     <ion-content>
+        <div class="padding">
+            <img src="img/logo.png" class="logo" />
+        </div>
         <div class="list">
             <label class="item item-input">
                 <span class="input-label">{{"FORM_EMAIL" | translate}}</span>
@@ -14,11 +17,6 @@
             <button class="button button-block button-positive" ng-click="signIn(user)" nav-clear>
                 {{"SIGNIN" | translate}}
             </button>
-            <p class="text-center">
-                <a href="#/register" class="button button-block button-assertive">
-                    {{"REGISTER" | translate}}
-                </a>
-            </p>
         </div>
     </ion-content>
 </ion-view>

@@ -38,7 +38,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         $rootScope.authData = authData;
                     } else {
                         $rootScope.hide();
-                        $state.go("signin");
+                        $state.go("introduction");
                     }
                 });
                 
@@ -56,8 +56,10 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
 
             
         })
-
-        .config(function ($stateProvider, $urlRouterProvider, $translateProvider) {
+        .config(function ($ionicConfigProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
+            
+            $ionicConfigProvider.views.maxCache(5);
+            $ionicConfigProvider.tabs.position('top');
             
             /************************************/
             /* TRANSLATE                        */
@@ -104,8 +106,14 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
             /* ROUTER                        */
             /************************************/
             $stateProvider
+            
+            
+                    .state('introduction', {
+                        url: '/introduction',
+                        templateUrl: 'templates/introduction.html',
+                        controller: 'IntroductionCtrl'
+                    })
 
-                    /* SIMPLE MEMBER STUFF */
                     .state('signin', {
                         url: '/sign-in',
                         templateUrl: 'templates/sign-in.html',
@@ -120,18 +128,13 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                                 }]
                         }
                     })
+                    
                     .state('register', {
                         url: '/register',
                         templateUrl: 'templates/register.html',
                         controller: 'RegisterCtrl'
                     })
-
-                    /* AFTER LOGGED IN */
-                    .state('introduction', {
-                        url: '/',
-                        templateUrl: 'templates/intro/introduction.html',
-                        controller: 'IntroductionCtrl'
-                    })
+                    
                     .state('register-house', {
                         url: '/',
                         templateUrl: 'templates/intro/register-house.html',
@@ -162,6 +165,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
 
                     .state('tabs.dashboard', {
                         url: '/dashboard',
+                        cache: false,
                         views: {
                             'tab-dashboard': {
                                 templateUrl: 'templates/tabs/dashboard.html',
@@ -218,7 +222,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     });
 
             // if none of the above states are matched, use this as the fallback
-            $urlRouterProvider.otherwise('/sign-in');
+            $urlRouterProvider.otherwise('/introduction');
 
         })
 
