@@ -136,6 +136,12 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         controller: 'RegisterCtrl'
                     })
                     
+                    .state('housechoice', {
+                        url: '/housechoice',
+                        templateUrl: 'templates/intro/housechoice.html',
+                        controller: 'HouseChoiceCtrl'
+                    })
+                    
                     .state('register-house', {
                         url: '/',
                         templateUrl: 'templates/intro/register-house.html',

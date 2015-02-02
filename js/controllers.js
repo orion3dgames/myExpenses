@@ -76,7 +76,8 @@ angular.module('starter.controllers', [])
                         surname: user.surname,
                         email: user.email,
                         created: Date.now(),
-                        updated: Date.now()
+                        updated: Date.now(),
+                        houseid: '-Jdom-JWsQC87Mm0Xtqm'
                     }
                     
                     /* SAVE PROFILE DATA */
@@ -84,7 +85,7 @@ angular.module('starter.controllers', [])
                     var myUser = usersRef.child(escapeEmailAddress(user.email));
                     myUser.update($scope.temp, function(){
                         $rootScope.hide();
-                        $state.go('introduction'); 
+                        $state.go('housechoice'); 
                     }); 
                     
                 }).catch(function (error) {
