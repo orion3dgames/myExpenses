@@ -129,10 +129,8 @@ angular.module('starter.services', [])
             return {
                
                 getRoomMate: function (email) {
-                    console.log(email);
                     var deferred = $q.defer();
                     var usersRef = ref.child(escapeEmailAddress(email));
-                    console.log(usersRef);
                     usersRef.once("value", function (snap) {
                         deferred.resolve(snap.val());
                     });
@@ -155,26 +153,37 @@ angular.module('starter.services', [])
             }
         })
         
-        .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+        .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, Auth,UserData) {
             
-            var ref = new Firebase("https://myexpenses.firebaseio.com/expenses");
-            var expenses = $firebase(ref).$asArray();
+            var expenses = {};
+            var ref = new Firebase("https://myexpenses.firebaseio.com/"); 
+            
+            /* Filter Vars */
+            var filter = 'all'; // default filter
+            var startTime = '1422749922';
+            var endTime = '1422904722';
             
             return {
                
-                getExpenses: function () {
-                    return expenses;
+                getExpenses: function (houseId, filter) {
+                    var deferred = $q.defer();
+                    var expensesRef = ref.child("houses/"+houseId+'/expenses');
+                    expenses = $firebase(expensesRef).$asArray();
+                    expenses.$loaded().then(function() {
+                        deferred.resolve(expenses);
+                    });
+                    return deferred.promise;
                 },
                
                 getExpense: function (expenseId) {
-                   return expenses.$getRecord(expenseId);
+
                 },
               
-                addExpense: function (expense) {
+                addExpense: function (expense, houseId) {
                     var deferred = $q.defer();
                     var output = {};
                     
-                    var sync = $firebase(ref);
+                    var sync = $firebase(ref.child("houses/"+houseId+'/expenses'));
                     sync.$push(expense).then(function(data) {
                         deferred.resolve(data);
                     }, function(error){

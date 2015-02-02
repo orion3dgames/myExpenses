@@ -257,8 +257,19 @@ angular.module('starter.controllers', [])
         })
 
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
-
-            $scope.expenses = ExpensesData.getExpenses();
+            
+            $rootScope.show('...');
+            fireBaseData.refreshData().then(function(){
+                ExpensesData.getExpenses(fireBaseData.currentData.currentHouse.id).then(function(expenses){
+                    $scope.expenses = expenses;
+                    $rootScope.hide();
+                });
+            });
+            
+            /* */
+            $scope.getExpenses = function (filter) {
+                console.log(filter);
+            };
             
             $ionicModal.fromTemplateUrl('templates/new-expense.html', {
                 scope: $scope,
@@ -266,7 +277,7 @@ angular.module('starter.controllers', [])
             }).then(function (modal) {
                 $scope.modal = modal;
             });
-            
+  
             $scope.newExpense = function () {
                 $scope.modal.show();
             };
@@ -293,12 +304,11 @@ angular.module('starter.controllers', [])
                     amount: amount,
                     purpose: purpose,
                     user: $rootScope.authData.password.email,
-                    house_id: fireBaseData.currentData.currentHouse.id,
-                    created: Date.now(),
+                    time: Date.now(),
                     updated: Date.now()
                 };
                 
-                ExpensesData.addExpense(temp).then(function () {
+                ExpensesData.addExpense(temp, fireBaseData.currentData.currentHouse.id).then(function () {
                     $rootScope.hide();
                     $scope.modal.hide();
                 }); 
