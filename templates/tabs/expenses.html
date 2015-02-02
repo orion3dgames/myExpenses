@@ -12,7 +12,7 @@
             </div>
             <br />
             <div class="item item-divider">Today</div>
-            <ion-item ng-repeat="expense in expenses | orderBy:'-created'" type="item-text-wrap">
+            <ion-item ng-repeat="expense in expenses | orderBy:'-created'" type="item-text-wrap" href="#/tab/expense/{{expense.$id}}">
                 <h2>{{expense.purpose}} </h2>
                 <p>{{expense.user}}</p>
                 <p>{{expense.created | date:'dd-MM-yyyy HH:mm:ss'}}</p>

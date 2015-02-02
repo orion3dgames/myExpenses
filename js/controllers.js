@@ -304,7 +304,7 @@ angular.module('starter.controllers', [])
                     amount: amount,
                     purpose: purpose,
                     user: $rootScope.authData.password.email,
-                    time: Date.now(),
+                    created: Date.now(),
                     updated: Date.now()
                 };
                 
@@ -329,6 +329,10 @@ angular.module('starter.controllers', [])
                     $scope.$broadcast('scroll.refreshComplete');
                 });  
             };  
+        })
+        
+        .controller('ExpenseDetailCtrl', function ($scope, expense) {
+            $scope.expense = expense;
         })
         
         .controller('MembersDetailCtrl', function ($scope, $rootScope, $stateParams, UserData, member) {

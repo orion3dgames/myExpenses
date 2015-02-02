@@ -1,0 +1,16 @@
+<ion-view view-title="Expense Details: {{expense.purpose}}">
+    <ion-content>
+        <label class="item item-input">
+            <span class="input-label">Purpose</span>
+            {{expense.purpose}}
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Amount</span> 
+            <i class="icon ion-social-usd placeholder-icon"></i>{{expense.amount}}
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Date</span> 
+            {{expense.created}}
+        </label>
+    </ion-content>
+</ion-view>

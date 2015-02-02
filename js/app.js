@@ -183,6 +183,18 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                             }
                         }
                     })
+                    
+                    .state('tabs.settings', {
+                        url: '/settings',
+                        views: {
+                            'tab-settings': {
+                                templateUrl: 'templates/tabs/settings.html',
+                                controller: 'SettingsCtrl'
+                            }
+                        }
+                    })
+                    
+                    /* EXPENSES */
                     .state('tabs.expenses', {
                         url: '/expenses',
                         views: {
@@ -192,12 +204,18 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                             }
                         }
                     })
-                    .state('tabs.settings', {
-                        url: '/settings',
+                    .state('tabs.expense-detail', {
+                        url: '/expense/:expenseId',
                         views: {
-                            'tab-settings': {
-                                templateUrl: 'templates/tabs/settings.html',
-                                controller: 'SettingsCtrl'
+                            'tab-expenses': {
+                                templateUrl: 'templates/tabs/expense-detail.html',
+                                controller: 'ExpenseDetailCtrl',
+                                resolve: {
+                                    expense: function($stateParams, ExpensesData) {
+                                        var id = $stateParams.expenseId;
+                                        return ExpensesData.getExpense(id);
+                                    }
+                                }
                             }
                         }
                     })

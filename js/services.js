@@ -153,7 +153,7 @@ angular.module('starter.services', [])
             }
         })
         
-        .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, Auth,UserData) {
+        .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData) {
             
             var expenses = {};
             var ref = new Firebase("https://myexpenses.firebaseio.com/"); 
@@ -176,7 +176,15 @@ angular.module('starter.services', [])
                 },
                
                 getExpense: function (expenseId) {
-
+                    var deferred = $q.defer();
+                    var childUrl = "houses/"+fireBaseData.currentData.currentHouse.id+"/expenses/"+expenseId;
+                    var usersRef = ref.child(childUrl);
+                    usersRef.once("value", function (snap) {
+                        deferred.resolve(snap.val());
+                        console.log(snap.val());
+                        console.log(childUrl);
+                    });
+                    return deferred.promise;
                 },
               
                 addExpense: function (expense, houseId) {
