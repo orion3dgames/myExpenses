@@ -158,20 +158,16 @@ angular.module('starter.services', [])
         .factory('ExpensesData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
             
             var ref = new Firebase("https://myexpenses.firebaseio.com/expenses");
-
+            var expenses = $firebase(ref).$asArray();
+            
             return {
                
-                getExpense: function () {
-                   
+                getExpenses: function () {
+                    return expenses;
                 },
-                
-                getExpenses: function (id) {
-                    var deferred = $q.defer();
-                    var output = {};
-                    ref.once('value', function (snap) {
-                        deferred.resolve(snap.val());
-                    });
-                    return deferred.promise;
+               
+                getExpense: function (expenseId) {
+                   return expenses.$getRecord(expenseId);
                 },
               
                 addExpense: function (expense) {

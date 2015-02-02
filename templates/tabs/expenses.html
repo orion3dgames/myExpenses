@@ -8,13 +8,13 @@
             <ion-item type="item-text-wrap" href="#">
                 <span class="item-title">{{'TABS_NAME_EXPENSES' | translate}}</span>
             </ion-item>
+            <div class="item item-divider">Today</div>
             <ion-item ng-repeat="expense in expenses | orderBy:'-created'" type="item-text-wrap" href="#/tab/expenses/{{expense.id}}">
                 <h2>{{expense.purpose}} </h2>
                 <p>{{expense.user}}</p>
                 <p>{{expense.created | date:'dd-MM-yyyy HH:mm:ss'}}</p>
-                <span class="badge badge-balanced">${{expense.amount}}</span>
+                <span class="badge badge-balanced">${{expense.amount}}</span>  
             </ion-item>
-
         </ion-list>
     </ion-content>
 </ion-view>

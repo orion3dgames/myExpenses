@@ -257,20 +257,8 @@ angular.module('starter.controllers', [])
         })
 
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
-            
-            $rootScope.show('...');
-            ExpensesData.getExpenses().then( function(output){
-                $rootScope.hide();
-                $scope.expenses = output;
-            });
-            $scope.doRefresh = function() {
-                $rootScope.show('...');
-                ExpensesData.getExpenses().then( function(output){
-                    $rootScope.hide();
-                    $scope.expenses = output;
-                    $scope.$broadcast('scroll.refreshComplete');
-                });  
-            };  
+
+            $scope.expenses = ExpensesData.getExpenses();
             
             $ionicModal.fromTemplateUrl('templates/new-expense.html', {
                 scope: $scope,
