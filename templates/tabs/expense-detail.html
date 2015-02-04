@@ -9,11 +9,15 @@
         </label>
         <label class="item item-input">
             <span class="input-label">Amount</span> 
-            <i class="icon ion-social-usd placeholder-icon"></i>{{expense.amount}}
+            <i class="icon ion-social-usd placeholder-icon"></i> {{expense.amount | number:2}}
         </label>
         <label class="item item-input">
             <span class="input-label">Date</span> 
-            {{expense.created}}
+            {{expense.created | date:'d MMMM yyyy h:mm a'}}
+        </label>
+        <label class="item item-input">
+            <span class="input-label">User</span> 
+            {{expense.user}}
         </label>
     </ion-content>
 </ion-view>
