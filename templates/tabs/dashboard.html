@@ -1,11 +1,14 @@
-<ion-view view-title="{{'TABS_NAME_DASHBOARD' | translate}} | {{currentHouse.name}}" >
-    <ion-content>
+<ion-view view-title="{{'TABS_NAME_DASHBOARD' | translate}} " >
+    <ion-header-bar align-title="left" class="bar bar-subheader bar-positive">
+        <h1 class="title">Current House: {{currentHouse.name}}</h1>
+    </ion-header-bar>
+    <ion-content class="has-header has-subheader"> 
         <div class="card">
             <div class="item item-text-wrap">
                 Hello {{currentUser.firstname}} {{currentUser.surname}}
             </div>                 
             <div class="item item-text-wrap">
-                Your current balance : <span class="badge badge-positive">+ $20</span>
+                Your current balance : <span class="badge badge-dark">+ $20</span>
             </div>               
         </div>     
     </ion-content>

@@ -5,7 +5,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 'firebase', 'pascalprecht.translate'])
 
-        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, fireBaseData, $ionicScrollDelegate,$state,Auth) {
+        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, $ionicScrollDelegate,$state, Auth, fireBaseData) {
             $ionicPlatform.ready(function () {
 
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -36,6 +36,24 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         console.log("Logged in as:", authData);
                         $state.go("tabs.dashboard");
                         $rootScope.authData = authData;
+
+                        if (!fireBaseData.currentData) {
+                            $rootScope.show('Updating...');
+                            fireBaseData.refreshData().then(function (output) {
+                                fireBaseData.currentData = output;
+                                $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                                $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                                $rootScope.isadmin = fireBaseData.currentData.isadmin;
+                                $rootScope.hide();
+                                console.log(fireBaseData.currentData);
+                                $rootScope.$emit('dataLoaded', 'Data to send');
+                            });
+                        } else {
+                            $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                            $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                            $rootScope.isadmin = fireBaseData.currentData.isadmin;
+                        }
+                        
                     } else {
                         $rootScope.hide();
                         $state.go("introduction");
@@ -58,7 +76,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
         })
         .config(function ($ionicConfigProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
             
-            //$ionicConfigProvider.views.maxCache(0);
+            $ionicConfigProvider.views.maxCache(0);
             $ionicConfigProvider.tabs.position('top');
             
             /************************************/
@@ -107,8 +125,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
             /* ROUTER                        */
             /************************************/
             $stateProvider
-            
-            
+   
                     .state('introduction', {
                         url: '/introduction',
                         templateUrl: 'templates/introduction.html',
@@ -138,7 +155,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                     
                     .state('housechoice', {
                         url: '/housechoice',
-                        templateUrl: 'templates/intro/housechoice.html',
+                        templateUrl: 'templates/intro/house-choice.html',
                         controller: 'HouseChoiceCtrl'
                     })
                     

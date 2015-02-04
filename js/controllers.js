@@ -232,42 +232,40 @@ angular.module('starter.controllers', [])
             };
         })
 
-        .controller('DashboardCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, ExpensesData,$ionicModal) {
-            
+        .controller('DashboardCtrl', function ($scope, $state, $rootScope, fireBaseData) {
             $scope.isadmin = false;
-            if(!fireBaseData.currentData){
+    
+             if (!fireBaseData.currentData) {
                 $rootScope.show('Updating...');
-                fireBaseData.refreshData().then( function(output){
+                fireBaseData.refreshData().then(function (output) {
                     fireBaseData.currentData = output;
-                    $scope.currentUser = fireBaseData.currentData.currentUser;
-                    $scope.currentHouse = fireBaseData.currentData.currentHouse;
-                    $scope.isadmin = fireBaseData.currentData.isadmin;
+                    $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                    $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                    $rootScope.isadmin = fireBaseData.currentData.isadmin;
                     $rootScope.hide();
                     console.log(fireBaseData.currentData);
                 });
-            }else{
-                $scope.currentUser = fireBaseData.currentData.currentUser;
-                $scope.currentHouse = fireBaseData.currentData.currentHouse;
-                $scope.isadmin = fireBaseData.currentData.isadmin;
+            } else {
+                $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                $rootScope.isadmin = fireBaseData.currentData.isadmin;
             }
             
             $scope.addamember = function () {
                 $state.go('addmember'); 
             };
-
         })
 
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
-            
-            $rootScope.show('...');
-            fireBaseData.refreshData().then(function(){
+
+            $scope.$on('$ionicView.enter', function(){
+                $rootScope.show('...');
                 ExpensesData.getExpenses(fireBaseData.currentData.currentHouse.id).then(function(expenses){
                     $scope.expenses = expenses;
                     $rootScope.hide();
                 });
             });
-            
-            /* */
+
             $scope.getExpenses = function (filter) {
                 console.log(filter);
             };
@@ -286,6 +284,15 @@ angular.module('starter.controllers', [])
             $scope.cancelModal = function() {
                 $scope.modal.hide();
             };
+            
+            $scope.doRefresh = function() {
+                $rootScope.show('...');
+                ExpensesData.getExpenses().then( function(output){
+                    $rootScope.hide();
+                    $scope.expense = output;
+                    $scope.$broadcast('scroll.refreshComplete');
+                });  
+            };  
             
             $scope.addExpense = function(expense) {
                 
@@ -317,11 +324,13 @@ angular.module('starter.controllers', [])
         })
         
         .controller('MembersCtrl', function ($scope, $rootScope, UserData) {
+            
             $rootScope.show('...');
             UserData.getRoomMates().then( function(output){
                 $rootScope.hide();
                 $scope.members = output;
             });
+            
             $scope.doRefresh = function() {
                 $rootScope.show('...');
                 UserData.getRoomMates().then( function(output){
@@ -330,6 +339,7 @@ angular.module('starter.controllers', [])
                     $scope.$broadcast('scroll.refreshComplete');
                 });  
             };  
+            
         })
         
         .controller('ExpenseDetailCtrl', function ($scope, expense) {
@@ -344,10 +354,11 @@ angular.module('starter.controllers', [])
 
             /* LOGOUT BUTTON */
             $scope.logout = function () {
+                fireBaseData.currentData = null;
                 $ionicHistory.clearCache();
                 fireBaseData.ref().unauth();
+                fireBaseData.clearData();
                 $rootScope.checkSession();
-                fireBaseData.currentData = {};
             };
             
             /* SETTINGS LANGUAGES */

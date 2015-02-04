@@ -69,6 +69,10 @@ angular.module('starter.services', [])
                     return refHouses;
                 },
                 
+                clearData: function () {
+                    currentData = false;
+                },
+                
                 checkDuplicateEmail: function (email) {
                     var deferred = $q.defer();
                     var usersRef = refRoomMates.child(escapeEmailAddress(email));
@@ -177,12 +181,10 @@ angular.module('starter.services', [])
                
                 getExpense: function (expenseId) {
                     var deferred = $q.defer();
-                    var childUrl = "houses/"+fireBaseData.currentData.currentHouse.id+"/expenses/"+expenseId;
-                    var usersRef = ref.child(childUrl);
+                    var usersRef = ref.child("houses/"+fireBaseData.currentData.currentHouse.id+"/expenses/"+expenseId);
                     usersRef.once("value", function (snap) {
-                        deferred.resolve(snap.val());
-                        console.log(snap.val());
-                        console.log(childUrl);
+                        var expense = snap.val();
+                        deferred.resolve(expense);
                     });
                     return deferred.promise;
                 },

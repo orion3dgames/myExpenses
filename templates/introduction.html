@@ -1,18 +1,22 @@
-<ion-view hide-nav-bar="true">
+<ion-view hide-nav-bar="true" class="background-intro">
     <ion-content has-header="false" hide-nav-bar="true" padding="true" has-tabs="false">
-        <div class="padding">
-            <img src="img/logo.png" class="logo" />
-            
-            <p class="text-center">
-                <button class="button button-positive" ui-sref="signin" nav-clear>
-                    {{"SIGNIN" | translate}}
-                </button>
-                <br />
-                <br />
-                <a href="#/register" class="button button-assertive">
-                    {{"REGISTER" | translate}}
-                </a>
-            </p>
+        <div class="padding"> 
+            <a href="#" class="logo"><span>$</span></a>
+            <p class="tagline">a flatmate expense tracker</p>
         </div>
     </ion-content>
+    <ion-footer-bar class="bar-dark">
+        <div class="row">
+            <div class="col">
+                <a ui-sref="signin" class="button-intro button-dark">
+                    I have an account
+                </a>
+            </div>
+            <div class="col">
+                <a ui-sref="register" class="button-intro button-positive">
+                    {{"REGISTER" | translate}}
+                </a>
+            </div>
+        </div>
+    </ion-footer-bar>
 </ion-view>
