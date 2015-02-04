@@ -7015,6 +7015,13 @@ a.button {
   -webkit-transition-duration: 0s;
   transition-duration: 0s; }
 
+h1, h2, h3, h4 {
+  font-weight: bold; }
+
+h4 {
+  text-transform: uppercase;
+  text-align: center; }
+
 .background-intro {
   background-image: url('../img/bg-intro.jpg');
   background-size: cover;
@@ -7047,7 +7054,7 @@ a.button {
   position: fixed;
   bottom: 20px;
   left: 50%;
-  margin-left: -30px;
+  margin-left: -25px;
   z-index: 100;
   font-size: 60px;
   color: #f8d50e; }
