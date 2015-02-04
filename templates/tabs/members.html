@@ -7,10 +7,7 @@
             pulling-text="Pull to refresh..."
             on-refresh="doRefresh()">
         </ion-refresher>
-        <ion-list> 
-            <ion-item type="item-text-wrap" href="#">
-                <span class="item-title">{{'TABS_NAME_MEMBERS' | translate}}</span>
-            </ion-item>
+        <ion-list>
             <ion-item ng-repeat="member in members" type="item-text-wrap" href="#/tab/member/{{member.email}}">
                 <span class="item-title">{{member.firstname}} {{member.surname}}</span>
                 <span class="item-note">{{member.email}}</span>
@@ -18,4 +15,3 @@
         </ion-list> 
     </ion-content>
 </ion-view>
-<a href="#" class="btn-add-expense" ng-click="newExpense()"><i class="ion-plus-circled"></i></a>
