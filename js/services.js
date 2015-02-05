@@ -169,6 +169,10 @@ angular.module('starter.services', [])
             
             return {
                
+                all: function () {
+                    return expenses;
+                },
+                
                 getExpenses: function (houseId, filter) {
                     var deferred = $q.defer();
                     var expensesRef = ref.child("houses/"+houseId+'/expenses');

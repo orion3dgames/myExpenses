@@ -8,23 +8,23 @@
         </div>
         <div class="list">
             <label class="item item-input">
-                <i class="icon ion-social-usd placeholder-icon"></i>
-                <span class="input-label">Amount</span>
-                <input type="number" ng-model="expense.amount" ng-init="0" placeholder="How much did it cost?">
-            </label>
-            <label class="item item-input">
                 <i class="icon ion-help-circled placeholder-icon"></i>
                 <span class="input-label">Purpose</span>
                 <input type="text" ng-model="expense.purpose" placeholder="Enter the purpose">
+            </label>
+            <label class="item item-input">
+                <i class="icon ion-social-usd placeholder-icon"></i>
+                <span class="input-label">Amount</span>
+                <input type="number" ng-model="expense.amount" ng-init="0" placeholder="How much did it cost?">
             </label>
         </div>
  
             <div class="row">
                 <div class="col">
-                    <button class="button button-block button-positive button-theme" ng-click="addExpense(expense)">Add Expense</button>
-                </div>
-                <div class="col">
                     <button class="button button-block button-dark button-theme" ng-click="cancelModal()">Cancel</button>
+                </div>
+                <div class="col col-70">
+                    <button class="button button-block button-positive button-theme" ng-click="addExpense(expense)">Add Expense</button>
                 </div>
             </div>
   

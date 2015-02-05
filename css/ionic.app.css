@@ -7031,7 +7031,7 @@ h4 {
   background: #212121; }
 
 .button-intro {
-  margin-top: -15px;
+  margin-top: -5px;
   margin-right: -30px;
   margin-bottom: -15px;
   display: block;
@@ -7039,7 +7039,7 @@ h4 {
   height: 100%;
   text-align: center;
   text-transform: uppercase;
-  padding: 8px 0;
+  padding: 13px 0;
   text-decoration: none;
   font-weight: bold; }
   .button-intro.button-dark {
@@ -7112,6 +7112,13 @@ h4 {
     text-align: center;
     text-transform: uppercase; }
 
+.loading-container {
+  background: rgba(0, 0, 0, 0.8); }
+  .loading-container .loading {
+    font-size: 12px; }
+    .loading-container .loading i {
+      font-size: 30px; }
+
 .slider {
   height: 95%; }
 
@@ -7123,3 +7130,10 @@ h4 {
 
 .slider-pager-page i {
   color: #FFF; }
+
+.bar-footer {
+  margin: 0px;
+  padding: 0px; }
+  .bar-footer .col {
+    margin: 0px;
+    padding: 0px; }

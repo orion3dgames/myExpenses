@@ -259,7 +259,7 @@ angular.module('starter.controllers', [])
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
 
             $scope.$on('$ionicView.enter', function(){
-                $rootScope.show('...');
+                $rootScope.show('');
                 ExpensesData.getExpenses(fireBaseData.currentData.currentHouse.id).then(function(expenses){
                     $scope.expenses = expenses;
                     $rootScope.hide();
@@ -286,7 +286,7 @@ angular.module('starter.controllers', [])
             };
             
             $scope.doRefresh = function() {
-                $rootScope.show('...');
+                $rootScope.show('');
                 ExpensesData.getExpenses().then( function(output){
                     $rootScope.hide();
                     $scope.expense = output;
@@ -325,14 +325,14 @@ angular.module('starter.controllers', [])
         
         .controller('MembersCtrl', function ($scope, $rootScope, UserData) {
             
-            $rootScope.show('...');
+            $rootScope.show('');
             UserData.getRoomMates().then( function(output){
                 $rootScope.hide();
                 $scope.members = output;
             });
             
             $scope.doRefresh = function() {
-                $rootScope.show('...');
+                $rootScope.show('');
                 UserData.getRoomMates().then( function(output){
                     $rootScope.hide();
                     $scope.members = output;

@@ -76,7 +76,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
         })
         .config(function ($ionicConfigProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
             
-            $ionicConfigProvider.views.maxCache(0);
+            //$ionicConfigProvider.views.maxCache(0);
             $ionicConfigProvider.tabs.position('top');
             
             /************************************/
