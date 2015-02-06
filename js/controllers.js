@@ -1,6 +1,6 @@
 angular.module('starter.controllers', [])
 
-        .controller('SignInCtrl', function ($scope, $rootScope, $state, $ionicHistory, fireBaseData, $firebase) {
+        .controller('SignInCtrl', function ($scope, $rootScope, $state, $ionicHistory, Auth, UserData, $firebase) {
 
             $scope.hideBackButton = true;
     
@@ -21,13 +21,13 @@ angular.module('starter.controllers', [])
                 }
                 
                 /* All good, let's authentify */
-                fireBaseData.ref().authWithPassword({
+                Auth.$authWithPassword({
                     email    : user.email,
                     password : user.password
                 }, function(error, authData) {
                     if (error === null) {
                         $rootScope.hide();
-                        $state.go('tabs.dashboard');
+                        //$state.go('tabs.dashboard');
                     } else {
                         $rootScope.hide();
                         $rootScope.alertPopup('Error','Email or Password is incorrect!');
@@ -76,18 +76,17 @@ angular.module('starter.controllers', [])
                         surname: user.surname,
                         email: user.email,
                         created: Date.now(),
-                        updated: Date.now(),
-                        houseid: '-Jdom-JWsQC87Mm0Xtqm'
+                        updated: Date.now()
                     }
                     
                     /* SAVE PROFILE DATA */
                     var usersRef = fireBaseData.refRoomMates();
                     var myUser = usersRef.child(escapeEmailAddress(user.email));
-                    myUser.update($scope.temp, function(){
+                    myUser.update($scope.temp, function( ret ){
+                        console.log(ret);
                         $rootScope.hide();
                         $state.go('housechoice'); 
-                    }); 
-                    
+                    });  
                 }).catch(function (error) {
                     if (error.code == 'INVALID_EMAIL') {
                         $rootScope.hide();
@@ -117,14 +116,15 @@ angular.module('starter.controllers', [])
             };
         })
 
+        .controller('HouseChoiceCtrl', function ($scope,$rootScope, $state) {
+            $rootScope.hide();
+        })
+        
         .controller('JoinHouseCtrl', function ($scope, $state) {
-            $state.go('tabs.dashboard'); 
+            
         })
 
-        .controller('RegisterHouseCtrl', function ($scope, $state, $ionicHistory, fireBaseData, $firebase, $rootScope) {
-            
-            $ionicHistory.clearHistory();
-            $scope.hideBackButton = true;
+        .controller('RegisterHouseCtrl', function ($scope, $state, $ionicHistory, $firebase, $rootScope, UserData, HouseData) {
             
             /* FOR DEV PURPOSES */
             $scope.house = {
@@ -145,10 +145,6 @@ angular.module('starter.controllers', [])
                     return;
                 }
                 
-                /* GET CURRENT USER */
-                var ref = fireBaseData.ref();
-                $rootScope.authData = ref.getAuth();
-                
                 /* PREPARE DATA */
                 $scope.temp = {
                     name: house_name,
@@ -156,10 +152,11 @@ angular.module('starter.controllers', [])
                     admin: $rootScope.authData.password.email,
                     created: Date.now(),
                     updated: Date.now(),
+                    join_code: HouseData.randomHouseCode()
                 };
                 
                 /* SAVE HOUSE DATA */
-                var myHouses = fireBaseData.refHouses();
+                var myHouses = HouseData.ref();
                 var sync = $firebase(myHouses);
                 sync.$push($scope.temp).then(function(newChildRef) {
     
@@ -169,12 +166,13 @@ angular.module('starter.controllers', [])
                     };
                     
                     /* SAVE PROFILE DATA */
-                    var usersRef = fireBaseData.refRoomMates();
+                    var usersRef = UserData.ref();
                     var myUser = usersRef.child(escapeEmailAddress($rootScope.authData.password.email));
                     myUser.update($scope.temp, function(){
                         $rootScope.hide();
                         $state.go('tabs.dashboard'); 
                     }); 
+                    myUser.setPriority(newChildRef.key());
                 });
 
             };
@@ -182,8 +180,7 @@ angular.module('starter.controllers', [])
         })
 
         .controller('joinHouseCtrl', function ($scope, $state, $ionicHistory) {
-            $ionicHistory.clearHistory();
-            $scope.hideBackButton = true;
+            
         })
         
         .controller('AddMemberCtrl', function ($scope,$rootScope, $state, $ionicHistory, fireBaseData) {
@@ -323,17 +320,19 @@ angular.module('starter.controllers', [])
             };
         })
         
-        .controller('MembersCtrl', function ($scope, $rootScope, UserData) {
+        .controller('MembersCtrl', function ($scope, $rootScope, UserData, fireBaseData) {
             
-            $rootScope.show('');
-            UserData.getRoomMates().then( function(output){
-                $rootScope.hide();
-                $scope.members = output;
+            $scope.$on('$ionicView.enter', function(){
+                $rootScope.show('');
+                UserData.getRoomMates(fireBaseData.currentData.currentHouse.id).then( function(output){
+                    $rootScope.hide();
+                    $scope.members = output;
+                });
             });
             
             $scope.doRefresh = function() {
                 $rootScope.show('');
-                UserData.getRoomMates().then( function(output){
+                UserData.getRoomMates(fireBaseData.currentData.currentHouse.id).then( function(output){
                     $rootScope.hide();
                     $scope.members = output;
                     $scope.$broadcast('scroll.refreshComplete');

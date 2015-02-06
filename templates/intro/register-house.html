@@ -1,6 +1,6 @@
 <ion-view view-title="Create a House" cache-view="false">
     <ion-content>
-        <div class="list">
+        <ion-list>
             <label class="item item-input">
                 <span class="input-label">Name of House</span>
                 <input type="text" ng-model="house.name">
@@ -12,7 +12,7 @@
                     <option value="AUD">AUD</option>
                 </select>
             </label>
-        </div>
+        </ion-list>
         <div class="padding">
             <button class="button button-block button-positive" ng-click="createHouse(house)">
                 Create House

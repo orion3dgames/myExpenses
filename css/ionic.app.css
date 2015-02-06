@@ -7103,9 +7103,9 @@ h4 {
   .button-theme.button-positive {
     color: #212121; }
 
-.platform-android .bar-subheader.has-tabs-top {
+.platform-ready .bar-subheader.has-tabs-top {
   top: 93px !important; }
-  .platform-android .bar-subheader.has-tabs-top h1 {
+  .platform-ready .bar-subheader.has-tabs-top h1 {
     color: #212121;
     font-size: 12px;
     font-weight: bold;

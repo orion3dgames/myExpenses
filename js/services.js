@@ -73,6 +73,8 @@ angular.module('starter.services', [])
                     currentData = false;
                 },
                 
+                
+                
                 checkDuplicateEmail: function (email) {
                     var deferred = $q.defer();
                     var usersRef = refRoomMates.child(escapeEmailAddress(email));
@@ -126,11 +128,50 @@ angular.module('starter.services', [])
         })
         
         
+        .factory('HouseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+            
+            var ref = new Firebase("https://myexpenses.firebaseio.com/houses");
+
+            return {
+                
+                ref: function () {
+                    return ref;
+                },
+                
+                getHouse: function (email) {
+                    var deferred = $q.defer();
+                    var usersRef = ref.child(escapeEmailAddress(email));
+                    usersRef.once("value", function (snap) {
+                        deferred.resolve(snap.val());
+                    });
+                    return deferred.promise;
+                },
+                
+                getHouses: function (id) {
+                    var deferred = $q.defer();
+                    var output = {};
+                    ref.once('value', function (snap) {
+                        console.log(snap.val());
+                        deferred.resolve(snap.val());
+                    });
+                    return deferred.promise;
+                },
+                
+                randomHouseCode: function () {
+                    return Math.floor((Math.random() * 100000000) + 100);
+                }
+            };
+        })
+        
         .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
             
             var ref = new Firebase("https://myexpenses.firebaseio.com/roommates");
 
             return {
+                
+                ref: function () {
+                    return ref;
+                },
                
                 getRoomMate: function (email) {
                     var deferred = $q.defer();
@@ -141,20 +182,17 @@ angular.module('starter.services', [])
                     return deferred.promise;
                 },
                 
-                getRoomMates: function (id) {
+                getRoomMates: function (houseid) {
                     var deferred = $q.defer();
                     var output = {};
-                    ref.once('value', function (snap) {
-                        console.log(snap.val());
-                        deferred.resolve(snap.val());
-                    });
+                    ref.startAt(houseid)
+                        .endAt(houseid)
+                        .once('value', function (snap) {
+                            deferred.resolve(snap.val());
+                        });
                     return deferred.promise;
-                },
-              
-                addRoomMate: function () {
-                    
-                }     
-            }
+                }  
+            };
         })
         
         .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData) {

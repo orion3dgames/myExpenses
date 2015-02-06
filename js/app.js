@@ -5,7 +5,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 'firebase', 'pascalprecht.translate'])
 
-        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, $ionicScrollDelegate,$state, Auth, fireBaseData) {
+        .run(function ($ionicPlatform, $rootScope, $firebaseAuth, $ionicScrollDelegate,$state, Auth, fireBaseData, UserData) {
             $ionicPlatform.ready(function () {
 
                 // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -33,27 +33,38 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 
                 Auth.$onAuth(function (authData) {
                     if (authData) {
-                        console.log("Logged in as:", authData);
-                        $state.go("tabs.dashboard");
-                        $rootScope.authData = authData;
-
-                        if (!fireBaseData.currentData) {
-                            $rootScope.show('Updating...');
-                            fireBaseData.refreshData().then(function (output) {
-                                fireBaseData.currentData = output;
-                                $rootScope.currentUser = fireBaseData.currentData.currentUser;
-                                $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
-                                $rootScope.isadmin = fireBaseData.currentData.isadmin;
-                                $rootScope.hide();
-                                console.log(fireBaseData.currentData);
-                                $rootScope.$emit('dataLoaded', 'Data to send');
-                            });
-                        } else {
-                            $rootScope.currentUser = fireBaseData.currentData.currentUser;
-                            $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
-                            $rootScope.isadmin = fireBaseData.currentData.isadmin;
-                        }
                         
+                        console.log("Logged in as:", authData);
+                        
+                        /* STORE AUTHDATA */
+                        $rootScope.authData = authData;
+                        
+                        /* IF NOT ALREADY IN A HOUSE, REDIRECT TO HOUSE CHOICE  */
+                        UserData.getRoomMate(authData.password.email).then(function (user) {
+                            if(user.houseid){
+                                $state.go("tabs.dashboard");
+
+                                if (!fireBaseData.currentData) {
+                                    $rootScope.show('Updating...');
+                                    fireBaseData.refreshData().then(function (output) {
+                                        fireBaseData.currentData = output;
+                                        $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                                        $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                                        $rootScope.isadmin = fireBaseData.currentData.isadmin;
+                                        $rootScope.hide();
+                                        console.log(fireBaseData.currentData);
+                                        $rootScope.$emit('dataLoaded', 'Data to send');
+                                    });
+                                } else {
+                                    $rootScope.currentUser = fireBaseData.currentData.currentUser;
+                                    $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
+                                    $rootScope.isadmin = fireBaseData.currentData.isadmin;
+                                }
+   
+                            }else{
+                                $state.go("housechoice");
+                            }
+                        });   
                     } else {
                         $rootScope.hide();
                         $state.go("introduction");
@@ -78,6 +89,8 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
             
             //$ionicConfigProvider.views.maxCache(0);
             $ionicConfigProvider.tabs.position('top');
+            $ionicConfigProvider.tabs.style('striped');
+            $ionicConfigProvider.navBar.alignTitle('left');
             
             /************************************/
             /* TRANSLATE                        */
@@ -159,13 +172,13 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         controller: 'HouseChoiceCtrl'
                     })
                     
-                    .state('register-house', {
-                        url: '/',
+                    .state('registerhouse', {
+                        url: '/registerhouse',
                         templateUrl: 'templates/intro/register-house.html',
                         controller: 'RegisterHouseCtrl'
                     })
-                    .state('join-house', {
-                        url: '/',
+                    .state('joinhouse', {
+                        url: '/joinhouse',
                         templateUrl: 'templates/intro/join-house.html',
                         controller: 'JoinHouseCtrl'
                     })
