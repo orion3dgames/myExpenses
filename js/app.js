@@ -40,27 +40,16 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         $rootScope.authData = authData;
                         
                         /* IF NOT ALREADY IN A HOUSE, REDIRECT TO HOUSE CHOICE  */
-                        UserData.getRoomMate(authData.password.email).then(function (user) {
-                            if(user.houseid){
+                        UserData.checkRoomMateHasHouse(authData.password.email).then(function(hasHouse) {
+                            if(hasHouse){
                                 $state.go("tabs.dashboard");
-
-                                if (!fireBaseData.currentData) {
-                                    $rootScope.show('Updating...');
-                                    fireBaseData.refreshData().then(function (output) {
-                                        fireBaseData.currentData = output;
-                                        $rootScope.currentUser = fireBaseData.currentData.currentUser;
-                                        $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
-                                        $rootScope.isadmin = fireBaseData.currentData.isadmin;
-                                        $rootScope.hide();
-                                        console.log(fireBaseData.currentData);
-                                        $rootScope.$emit('dataLoaded', 'Data to send');
-                                    });
-                                } else {
-                                    $rootScope.currentUser = fireBaseData.currentData.currentUser;
-                                    $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
-                                    $rootScope.isadmin = fireBaseData.currentData.isadmin;
-                                }
-   
+                                $rootScope.show('Updating...');
+                                fireBaseData.refreshData().then(function (output) {
+                                    fireBaseData.currentData = output;
+                                    $rootScope.hide();
+                                    console.log(fireBaseData.currentData);
+                                    $rootScope.$emit('dataLoaded', 'Data to send');
+                                });
                             }else{
                                 $state.go("housechoice");
                             }
@@ -80,14 +69,11 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 });
                 
             });
-            
-                        
-
-            
         })
+        
         .config(function ($ionicConfigProvider, $stateProvider, $urlRouterProvider, $translateProvider) {
             
-            //$ionicConfigProvider.views.maxCache(0);
+            $ionicConfigProvider.views.maxCache(0);
             $ionicConfigProvider.tabs.position('top');
             $ionicConfigProvider.tabs.style('striped');
             $ionicConfigProvider.navBar.alignTitle('left');

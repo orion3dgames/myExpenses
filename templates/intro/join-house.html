@@ -1,16 +1,18 @@
-<!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
-<html>
-    <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    </head>
-    <body>
-        <div>TODO write content</div>
-    </body>
-</html>
+<ion-view view-title="Join a House" cache-view="false">
+    <ion-content>
+        <div class="padding">
+            <h4>Joining an existing house</h4>
+            <p class="text-center">Please enter the house code.</p>
+            <p class="text-center"><b>Developer Notes</b> Join me with : 94922503</p>
+        </div>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">House Code</span>
+                <input type="number" ng-model="code">
+            </label>
+        </div>
+        <div class="padding">
+            <button class="button button-block button-positive button-theme" ng-click="joinHouse(code)" nav-clear>Join</button>
+        </div>
+    </ion-content>
+</ion-view>

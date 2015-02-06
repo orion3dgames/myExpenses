@@ -147,6 +147,27 @@ angular.module('starter.services', [])
                     return deferred.promise;
                 },
                 
+                getHouseByCode: function (code) {
+                    var deferred = $q.defer();
+                    ref.orderByChild("join_code").startAt(code)
+                        .endAt(code)
+                        .once('value', function(snap) {
+                            if(snap.val()){
+                                var house,houseid;
+                                angular.forEach(snap.val(), function(value, key) {
+                                    house = value;
+                                    houseid = key;
+                                });
+                                if(house.join_code === code){
+                                    deferred.resolve(houseid);
+                                }
+                            }
+                        }, function (errorObject) {
+                            console.log("The read failed: " + errorObject.code);
+                        });
+                    return deferred.promise;
+                },
+                
                 getHouses: function (id) {
                     var deferred = $q.defer();
                     var output = {};
@@ -178,6 +199,20 @@ angular.module('starter.services', [])
                     var usersRef = ref.child(escapeEmailAddress(email));
                     usersRef.once("value", function (snap) {
                         deferred.resolve(snap.val());
+                    });
+                    return deferred.promise;
+                },
+                
+                checkRoomMateHasHouse: function (email) {
+                    var deferred = $q.defer();
+                    var usersRef = ref.child(escapeEmailAddress(email));
+                    usersRef.once("value", function (snap) {
+                        var user = snap.val();
+                        if(user.houseid){
+                            deferred.resolve(true);
+                        }else{
+                            deferred.reject(false);
+                        }
                     });
                     return deferred.promise;
                 },

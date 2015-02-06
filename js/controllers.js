@@ -179,7 +179,30 @@ angular.module('starter.controllers', [])
             
         })
 
-        .controller('joinHouseCtrl', function ($scope, $state, $ionicHistory) {
+        .controller('JoinHouseCtrl', function ($scope, $state, $ionicHistory, HouseData,UserData,$rootScope) {
+            
+            $scope.code = 94922503;
+    
+            $scope.joinHouse = function(code){
+                if(code){
+                    HouseData.getHouseByCode(code).then(function (value) {
+                        if(value){
+                            $scope.temp = {
+                                houseid: value
+                            }
+                            /* SAVE PROFILE DATA */
+                            var usersRef = UserData.ref();
+                            var myUser = usersRef.child(escapeEmailAddress($rootScope.authData.password.email));
+                            myUser.update($scope.temp, function(){
+                                $rootScope.hide();
+                                $state.go('tabs.dashboard'); 
+                            }); 
+                            myUser.setPriority(value);
+                        }
+                    });
+                }
+            };
+            
             
         })
         
@@ -230,6 +253,7 @@ angular.module('starter.controllers', [])
         })
 
         .controller('DashboardCtrl', function ($scope, $state, $rootScope, fireBaseData) {
+            
             $scope.isadmin = false;
     
              if (!fireBaseData.currentData) {
@@ -254,7 +278,7 @@ angular.module('starter.controllers', [])
         })
 
         .controller('ExpensesCtrl', function ($scope, $rootScope, ExpensesData, fireBaseData, $ionicModal) {
-
+            
             $scope.$on('$ionicView.enter', function(){
                 $rootScope.show('');
                 ExpensesData.getExpenses(fireBaseData.currentData.currentHouse.id).then(function(expenses){
@@ -353,11 +377,9 @@ angular.module('starter.controllers', [])
 
             /* LOGOUT BUTTON */
             $scope.logout = function () {
-                fireBaseData.currentData = null;
                 $ionicHistory.clearCache();
                 fireBaseData.ref().unauth();
                 fireBaseData.clearData();
-                $rootScope.checkSession();
             };
             
             /* SETTINGS LANGUAGES */
