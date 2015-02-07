@@ -15,8 +15,8 @@ $royal:                           #886aea !default;
 $dark:                            #444 !default;
 */
 
-$positive:                        #22c064 !default;
-$assertive:                       #1c57ff !default;
+$dark:                            #212121 !default;
+$positive:                        #f8d50e !default;
 
 // The path for our ionicons font files, relative to the built CSS in www/css
 $ionicons-font-path: "../lib/ionic/fonts" !default;
@@ -34,10 +34,12 @@ h4 {
 .background-intro {
     background-image: url('../img/bg-intro.jpg');
     background-size: cover;
-    background-position: center; }
+    background-position: center;
+}
 
 .background-dark {
-    background: #212121; }
+    background: $dark;
+}
 
 .button-intro {
     margin-top: -5px;
@@ -53,12 +55,12 @@ h4 {
     font-weight: bold;
     
     &.button-dark {
-        background: #212121;
+        background: $dark;
         color: #FFF; 
     }
     
     &.button-positive {
-        background: #f8d50e;
+        background: $positive;
         color: #000; 
     }
 }
@@ -71,7 +73,7 @@ h4 {
     margin-left: -25px;
     z-index: 100;
     font-size: 60px;
-    color: #f8d50e; 
+    color: $positive; 
 }
 
 .logo {
@@ -93,7 +95,7 @@ h4 {
 
 .logo span {
     font-size: 40px;
-    color: #212121;
+    color: $dark;
     position: absolute;
     top: 40%;
     left: 40%; 
@@ -113,14 +115,14 @@ h4 {
     text-transform: uppercase; 
     
     &.button-positive {
-        color: #212121;
+        color: $dark;
     }
 }
 
 .platform-ready .bar-subheader.has-tabs-top {
     top: 93px !important; }
 .platform-ready .bar-subheader.has-tabs-top h1 {
-    color: #212121;
+    color: $dark;
     font-size: 12px;
     font-weight: bold;
     text-align: center;
