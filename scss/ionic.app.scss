@@ -162,3 +162,28 @@ h4 {
     margin: 0px;
     padding: 0px; 
 }
+
+form i.icon.error {
+  color: $assertive;
+}
+ 
+form input + i.icon.error {
+  display: none;
+  margin-left: 8px;
+}
+ 
+form.ng-submitted input.ng-invalid + i.icon.error {
+  display: block;
+}
+ 
+form .has-error {
+  border-left: 5px solid darken($assertive, 15%);
+}
+ 
+form .has-success {
+  border-left: 5px solid darken($energized, 15%);
+}
+ 
+form.ng-submitted input.ng-valid + i.icon.error {
+  display: none;
+}

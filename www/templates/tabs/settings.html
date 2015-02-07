@@ -13,13 +13,10 @@
                 </div>
                 <select ng-options="language.name for language in languages" ng-model="selectLanguage" ng-change="updateLanguage(selectLanguage)"></select>
             </label>
-            <ion-item type="item-text-wrap" href="#">
-                <span class="item-title">{{'SETTINGS_QUIT_HOUSE'| translate}}</span>
-            </ion-item>
         </div>
         <div class="padding">
             <button class="button button-block button-positive button-theme" ng-click="quitHouse()">
-                Quit House
+                {{'SETTINGS_QUIT_HOUSE'| translate}}
             </button>
             <button class="button button-block button-dark button-theme" ng-click="logout()">
                 {{'LOGOUT'| translate}}

@@ -15,24 +15,22 @@ angular.module('starter.controllers', [])
                 $rootScope.show('Logging In...');
                 
                 /* Check user fields*/
-                if(!user || !user.email || !user.password){
-                    $rootScope.alertPopup('Error','Email or Password is incorrect!');
+                if(!user.email || !user.password){
+                    $rootScope.hide();
+                    $rootScope.notify('Error','Email or Password is incorrect!');
                     return;
                 }
-                
+
                 /* All good, let's authentify */
                 Auth.$authWithPassword({
                     email    : user.email,
                     password : user.password
-                }, function(error, authData) {
-                    if (error === null) {
-                        $rootScope.hide();
-                        console.log('test');
-                        //$state.go('tabs.dashboard');
-                    } else {
-                        $rootScope.hide();
-                        $rootScope.alertPopup('Error','Email or Password is incorrect!');
-                    }
+                }).then(function (authData) {
+                    console.log(authData);
+                    $rootScope.hide();
+                }).catch(function (error) {
+                    $rootScope.hide();
+                    $rootScope.notify('Error','Email or Password is incorrect!');
                 });
             };
 
@@ -42,12 +40,14 @@ angular.module('starter.controllers', [])
             $scope.hideBackButton = true;
             
             /* FOR DEV PURPOSES */
+            
             $scope.user = {
-                firstname: "John",
-                surname: "Doe",
-                email: "johndoe@gmail.com",
-                password: "password"
+                firstname: "",
+                surname: "",
+                email: "",
+                password: ""
             };
+            
             
             $scope.createUser = function (user) {
                 var firstname = user.firstname;
@@ -182,7 +182,7 @@ angular.module('starter.controllers', [])
 
         .controller('JoinHouseCtrl', function ($scope, $state, $ionicHistory, HouseData,UserData,$rootScope) {
             
-            $scope.code = 94922503;
+            $scope.code = 86105966;
     
             $scope.joinHouse = function(code){
                 if(code){
@@ -254,10 +254,8 @@ angular.module('starter.controllers', [])
         })
 
         .controller('DashboardCtrl', function ($scope, $state, $rootScope, fireBaseData) {
-            
-            $scope.isadmin = false;
-    
-             if (!fireBaseData.currentData) {
+
+            $scope.$on('$ionicView.enter', function(){
                 $rootScope.show('Updating...');
                 fireBaseData.refreshData().then(function (output) {
                     fireBaseData.currentData = output;
@@ -267,11 +265,7 @@ angular.module('starter.controllers', [])
                     $rootScope.hide();
                     console.log(fireBaseData.currentData);
                 });
-            } else {
-                $rootScope.currentUser = fireBaseData.currentData.currentUser;
-                $rootScope.currentHouse = fireBaseData.currentData.currentHouse;
-                $rootScope.isadmin = fireBaseData.currentData.isadmin;
-            }
+            });
             
             $scope.addamember = function () {
                 $state.go('addmember'); 
@@ -378,6 +372,7 @@ angular.module('starter.controllers', [])
 
             /* LOGOUT BUTTON */
             $scope.logout = function () {
+                $rootScope.show('');
                 fireBaseData.clearData();
                 $ionicHistory.clearCache();
                 Auth.$unauth();

@@ -1,16 +1,13 @@
 angular.module('starter.services', [])
         
-        .factory('Auth', function ($firebaseAuth, $rootScope) {
-            var ref = new Firebase("https://myexpenses.firebaseio.com/")
+        .factory('Auth', function ($firebaseAuth, $rootScope, CONFIGURATION) {
+            var ref = new Firebase(CONFIGURATION.FIREBASE_URL)
             return $firebaseAuth(ref); 
         })
 
-        .factory('fireBaseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+        .factory('fireBaseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $q, CONFIGURATION) {
 
-            var ref = new Firebase("https://myexpenses.firebaseio.com/"),
-                refExpenses = new Firebase("https://myexpenses.firebaseio.com/expenses"),
-                refRoomMates = new Firebase("https://myexpenses.firebaseio.com/roommates"),
-                refHouses = new Firebase("https://myexpenses.firebaseio.com/houses");
+            var ref = new Firebase(CONFIGURATION.FIREBASE_URL);
 
             var currentData = {
                 currentUser: false,
@@ -38,46 +35,16 @@ angular.module('starter.services', [])
             $rootScope.hide = function (text) {
                 $ionicLoading.hide();
             };
-
-            $rootScope.checkSession = function () {
-                $rootScope.show('LOGGING IN');
-                $rootScope.authData = ref.getAuth();
-                if ($rootScope.authData) {
-                    $rootScope.hide();
-                    $state.go('tabs.dashboard');
-
-                } else {
-                    $rootScope.hide();
-                    $state.go('signin');
-                }
-            };
             
             return {
-                ref: function () {
-                    return ref;
-                },
-                
-                refExpenses: function () {
-                    return refExpenses;
-                },
-                
-                refRoomMates: function () {
-                    return refRoomMates;
-                },
-                
-                refHouses: function () {
-                    return refHouses;
-                },
                 
                 clearData: function () {
                     currentData = false;
                 },
-                
-                
-                
+
                 checkDuplicateEmail: function (email) {
                     var deferred = $q.defer();
-                    var usersRef = refRoomMates.child(escapeEmailAddress(email));
+                    var usersRef = ref.child("roommates/"+escapeEmailAddress(email));
                     usersRef.once("value", function (snap) {
                         if (snap.val() === null) {
                             deferred.resolve(true);
@@ -89,27 +56,15 @@ angular.module('starter.services', [])
                     return deferred.promise;
                 },
                 
-                checkAuth: function () {
-                    var deferred = $q.defer();
-                    var authData = ref.getAuth();
-                    if (authData) {
-                        deferred.resolve(authData);
-                    } else {
-                        var err = 'TEST';
-                        deferred.reject(err);
-                    }
-                    return deferred.promise;
-                },
-                
                 refreshData: function () {
                     var output = {};
                     var deferred = $q.defer();
                     var authData = ref.getAuth();
                     if (authData) {
-                        var usersRef = refRoomMates.child(escapeEmailAddress(authData.password.email));
+                        var usersRef = ref.child("roommates/"+escapeEmailAddress(authData.password.email));
                         usersRef.once("value", function (snap) {
                             output.currentUser = snap.val();
-                            var housesRef = refHouses.child(output.currentUser.houseid);
+                            var housesRef = ref.child("houses/"+output.currentUser.houseid);
                             housesRef.once("value", function (snap) {
                                 output.currentHouse = snap.val();
                                 output.currentHouse.id = housesRef.key();
@@ -204,11 +159,9 @@ angular.module('starter.services', [])
                 },
                 
                 checkRoomMateHasHouse: function (email) {
-                    console.log('checkRoomMateHasHouse');
                     var deferred = $q.defer();
                     var usersRef = ref.child(escapeEmailAddress(email));
                     usersRef.once("value", function (snap) {
-                        console.log('Once Value');
                         var user = snap.val();
                         if(user.houseid){
                             deferred.resolve(true);
