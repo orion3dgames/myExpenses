@@ -196,15 +196,15 @@ angular.module('starter.services', [])
             };
         })
         
-        .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData) {
+        .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData, CONFIGURATION) {
             
             var expenses = {};
-            var ref = new Firebase("https://myexpenses.firebaseio.com/"); 
+            var ref = new Firebase(CONFIGURATION.FIREBASE_URL); 
             
             /* Filter Vars */
-            var filter = 'all'; // default filter
-            var startTime = '1422749922';
-            var endTime = '1422904722';
+            var filter = 'all',
+                startTime = '0000000000',
+                endTime = 0;
             
             return {
                
@@ -217,9 +217,16 @@ angular.module('starter.services', [])
                     var expensesRef = ref.child("houses/"+houseId+'/expenses');
                     expenses = $firebase(expensesRef).$asArray();
                     expenses.$loaded().then(function() {
+                        angular.forEach(expenses, function(value, key) {
+                            UserData.getRoomMate(expenses[key].user).then(function (user) {
+                                expenses[key].user = user.firstname+" "+user.surname;
+                            });
+                        });
+                        
                         deferred.resolve(expenses);
                     });
                     return deferred.promise;
+                 
                 },
                
                 getExpense: function (expenseId) {
@@ -238,10 +245,13 @@ angular.module('starter.services', [])
                     
                     var sync = $firebase(ref.child("houses/"+houseId+'/expenses'));
                     sync.$push(expense).then(function(data) {
+                        console.log();
                         deferred.resolve(data);
                     }, function(error){
                         deferred.reject(error);
                     });
+                    
+                    //sync.setPriority(expense.created);
                     
                     return deferred.promise;
                 }     
