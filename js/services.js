@@ -204,9 +204,11 @@ angular.module('starter.services', [])
                 },
                 
                 checkRoomMateHasHouse: function (email) {
+                    console.log('checkRoomMateHasHouse');
                     var deferred = $q.defer();
                     var usersRef = ref.child(escapeEmailAddress(email));
                     usersRef.once("value", function (snap) {
+                        console.log('Once Value');
                         var user = snap.val();
                         if(user.houseid){
                             deferred.resolve(true);
@@ -218,6 +220,17 @@ angular.module('starter.services', [])
                 },
                 
                 getRoomMates: function (houseid) {
+                    var deferred = $q.defer();
+                    var output = {};
+                    ref.startAt(houseid)
+                        .endAt(houseid)
+                        .once('value', function (snap) {
+                            deferred.resolve(snap.val());
+                        });
+                    return deferred.promise;
+                },
+                
+                quitHouse: function (houseid) {
                     var deferred = $q.defer();
                     var output = {};
                     ref.startAt(houseid)

@@ -11,7 +11,7 @@ angular.module('starter.controllers', [])
             };
             
             $scope.signIn = function (user) {
-
+                
                 $rootScope.show('Logging In...');
                 
                 /* Check user fields*/
@@ -27,6 +27,7 @@ angular.module('starter.controllers', [])
                 }, function(error, authData) {
                     if (error === null) {
                         $rootScope.hide();
+                        console.log('test');
                         //$state.go('tabs.dashboard');
                     } else {
                         $rootScope.hide();
@@ -373,13 +374,31 @@ angular.module('starter.controllers', [])
             $scope.member = member;
         })
 
-        .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory) {
+        .controller('SettingsCtrl', function ($scope, $rootScope, $state, $translate, fireBaseData, $ionicHistory, Auth, UserData) {
 
             /* LOGOUT BUTTON */
             $scope.logout = function () {
-                $ionicHistory.clearCache();
-                fireBaseData.ref().unauth();
                 fireBaseData.clearData();
+                $ionicHistory.clearCache();
+                Auth.$unauth();
+            };
+            
+            $scope.quitHouse = function () {
+                /* UPDATE USER WITH THE HOUSE ID */
+                $scope.temp = {
+                    houseid: null
+                };
+
+                /* UPDATE PROFILE DATA */
+                var usersRef = UserData.ref();
+                var myUser = usersRef.child(escapeEmailAddress($rootScope.authData.password.email));
+                myUser.update($scope.temp, function(){
+                    fireBaseData.clearData();
+                    $ionicHistory.clearCache();
+                    $rootScope.currentUser = null;
+                    $rootScope.currentHouse = null;
+                    $state.go('housechoice'); 
+                }); 
             };
             
             /* SETTINGS LANGUAGES */

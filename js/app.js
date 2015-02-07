@@ -33,9 +33,7 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                 
                 Auth.$onAuth(function (authData) {
                     if (authData) {
-                        
                         console.log("Logged in as:", authData);
-                        
                         /* STORE AUTHDATA */
                         $rootScope.authData = authData;
                         
@@ -43,7 +41,6 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                         UserData.checkRoomMateHasHouse(authData.password.email).then(function(hasHouse) {
                             if(hasHouse){
                                 $state.go("tabs.dashboard");
-                                $rootScope.show('Updating...');
                                 fireBaseData.refreshData().then(function (output) {
                                     fireBaseData.currentData = output;
                                     $rootScope.hide();
@@ -51,8 +48,14 @@ angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 
                                     $rootScope.$emit('dataLoaded', 'Data to send');
                                 });
                             }else{
+                                console.log('No House!!!');
+                                $rootScope.hide();
                                 $state.go("housechoice");
                             }
+                        }, function(error){
+                            console.log('No House!!!');
+                            $rootScope.hide();
+                            $state.go("housechoice");
                         });   
                     } else {
                         $rootScope.hide();
