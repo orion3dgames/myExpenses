@@ -14,6 +14,7 @@ I will be updating this regularly, and more than appreciate anybody helping out 
 - Login / Register via Firebase AUTH
 - Basic Navigation
 - Translate Integrated (English / French atm, but you can add many more.) 
+- Creating houses, Joining houses, Quitting Houses is now more or less functional
 - Lot's more to come
 
 ## Installing
