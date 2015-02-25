@@ -9,9 +9,4 @@ platforms/
 plugins/
 resources/
 test/
-bower.json
-config.xml
-gulpfile.js
-ionic.project
-package.json
 

@@ -83,9 +83,9 @@ angular.module('starter.services', [])
         })
         
         
-        .factory('HouseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+        .factory('HouseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, CONFIGURATION) {
             
-            var ref = new Firebase("https://myexpenses.firebaseio.com/houses");
+            var ref = new Firebase(CONFIGURATION.FIREBASE_URL+"houses");
 
             return {
                 
@@ -139,9 +139,9 @@ angular.module('starter.services', [])
             };
         })
         
-        .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
+        .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, CONFIGURATION) {
             
-            var ref = new Firebase("https://myexpenses.firebaseio.com/roommates");
+            var ref = new Firebase(CONFIGURATION.FIREBASE_URL+"roommates");
 
             return {
                 
