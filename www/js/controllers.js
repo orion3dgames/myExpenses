@@ -36,11 +36,10 @@ angular.module('starter.controllers', [])
 
         })
 
-        .controller('RegisterCtrl', function ($scope, $rootScope, $state, $firebase, fireBaseData, $firebaseAuth) {
+        .controller('RegisterCtrl', function ($scope, $rootScope, $state, $firebase, fireBaseData, UserData, $firebaseAuth) {
             $scope.hideBackButton = true;
             
-            /* FOR DEV PURPOSES */
-            
+            /* FOR DEV PURPOSES */            
             $scope.user = {
                 firstname: "",
                 surname: "",
@@ -81,7 +80,7 @@ angular.module('starter.controllers', [])
                     }
                     
                     /* SAVE PROFILE DATA */
-                    var usersRef = fireBaseData.refRoomMates();
+                    var usersRef = UserData.ref();
                     var myUser = usersRef.child(escapeEmailAddress(user.email));
                     myUser.update($scope.temp, function( ret ){
                         console.log(ret);

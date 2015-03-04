@@ -38,6 +38,10 @@ angular.module('starter.services', [])
             
             return {
                 
+                ref: function () {
+                    return ref;
+                },
+                
                 clearData: function () {
                     currentData = false;
                 },
