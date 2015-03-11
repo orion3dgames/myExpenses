@@ -1,12 +1,9 @@
+
+/* REPLACE BY YOUR FIREBASE ID */
+var fb = new Firebase("https://myexpenses.firebaseio.com/");
+
 // angular.module is a global place for creating, registering and retrieving Angular modules
 angular.module('ionicApp', ['ionic', 'starter.controllers', 'starter.services', 'starter.directives', 'firebase', 'pascalprecht.translate'])
-        
-        /*
-         * APP CONFIGURATION GOES HERE
-         */
-        .constant('CONFIGURATION', {
-          'FIREBASE_URL': 'https://myexpenses.firebaseio.com/'
-        })
         
         .run(function ($ionicPlatform, $rootScope, $firebaseAuth, $ionicScrollDelegate, $state, Auth, fireBaseData, UserData) {
             

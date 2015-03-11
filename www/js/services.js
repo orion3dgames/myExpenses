@@ -1,13 +1,10 @@
 angular.module('starter.services', [])
         
-        .factory('Auth', function ($firebaseAuth, $rootScope, CONFIGURATION) {
-            var ref = new Firebase(CONFIGURATION.FIREBASE_URL)
-            return $firebaseAuth(ref); 
+        .factory('Auth', function ($firebaseAuth, $rootScope) {
+            return $firebaseAuth(fb); 
         })
 
-        .factory('fireBaseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $q, CONFIGURATION) {
-
-            var ref = new Firebase(CONFIGURATION.FIREBASE_URL);
+        .factory('fireBaseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $q) {
 
             var currentData = {
                 currentUser: false,
@@ -38,17 +35,13 @@ angular.module('starter.services', [])
             
             return {
                 
-                ref: function () {
-                    return ref;
-                },
-                
                 clearData: function () {
                     currentData = false;
                 },
 
                 checkDuplicateEmail: function (email) {
                     var deferred = $q.defer();
-                    var usersRef = ref.child("roommates/"+escapeEmailAddress(email));
+                    var usersRef = fb.child("roommates/"+escapeEmailAddress(email));
                     usersRef.once("value", function (snap) {
                         if (snap.val() === null) {
                             deferred.resolve(true);
@@ -63,12 +56,12 @@ angular.module('starter.services', [])
                 refreshData: function () {
                     var output = {};
                     var deferred = $q.defer();
-                    var authData = ref.getAuth();
+                    var authData = fb.getAuth();
                     if (authData) {
-                        var usersRef = ref.child("roommates/"+escapeEmailAddress(authData.password.email));
+                        var usersRef = fb.child("roommates/"+escapeEmailAddress(authData.password.email));
                         usersRef.once("value", function (snap) {
                             output.currentUser = snap.val();
-                            var housesRef = ref.child("houses/"+output.currentUser.houseid);
+                            var housesRef = fb.child("houses/"+output.currentUser.houseid);
                             housesRef.once("value", function (snap) {
                                 output.currentHouse = snap.val();
                                 output.currentHouse.id = housesRef.key();
@@ -87,9 +80,9 @@ angular.module('starter.services', [])
         })
         
         
-        .factory('HouseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, CONFIGURATION) {
+        .factory('HouseData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
             
-            var ref = new Firebase(CONFIGURATION.FIREBASE_URL+"houses");
+            var ref = fb.child("houses");
 
             return {
                 
@@ -143,9 +136,9 @@ angular.module('starter.services', [])
             };
         })
         
-        .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q, CONFIGURATION) {
+        .factory('UserData', function ($firebase, $rootScope, $ionicPopup, $ionicLoading, $state, $firebaseAuth, $q) {
             
-            var ref = new Firebase(CONFIGURATION.FIREBASE_URL+"roommates");
+            var ref = fb.child("roommates");
 
             return {
                 
@@ -200,11 +193,10 @@ angular.module('starter.services', [])
             };
         })
         
-        .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData, CONFIGURATION) {
+        .factory('ExpensesData', function ($firebase, $rootScope, $firebaseAuth, $q, UserData, fireBaseData) {
             
             var expenses = {};
-            var ref = new Firebase(CONFIGURATION.FIREBASE_URL); 
-            
+    
             /* Filter Vars */
             var filter = 'all',
                 startTime = '0000000000',
@@ -218,7 +210,7 @@ angular.module('starter.services', [])
                 
                 getExpenses: function (houseId, filter) {
                     var deferred = $q.defer();
-                    var expensesRef = ref.child("houses/"+houseId+'/expenses');
+                    var expensesRef = fb.child("houses/"+houseId+'/expenses');
                     expenses = $firebase(expensesRef).$asArray();
                     expenses.$loaded().then(function() {
                         angular.forEach(expenses, function(value, key) {
@@ -235,7 +227,7 @@ angular.module('starter.services', [])
                
                 getExpense: function (expenseId) {
                     var deferred = $q.defer();
-                    var usersRef = ref.child("houses/"+fireBaseData.currentData.currentHouse.id+"/expenses/"+expenseId);
+                    var usersRef = fb.child("houses/"+fireBaseData.currentData.currentHouse.id+"/expenses/"+expenseId);
                     usersRef.once("value", function (snap) {
                         var expense = snap.val();
                         deferred.resolve(expense);
@@ -247,16 +239,14 @@ angular.module('starter.services', [])
                     var deferred = $q.defer();
                     var output = {};
                     
-                    var sync = $firebase(ref.child("houses/"+houseId+'/expenses'));
+                    var sync = $firebase(fb.child("houses/"+houseId+'/expenses'));
                     sync.$push(expense).then(function(data) {
                         console.log();
                         deferred.resolve(data);
                     }, function(error){
                         deferred.reject(error);
                     });
-                    
-                    //sync.setPriority(expense.created);
-                    
+
                     return deferred.promise;
                 }     
             }
