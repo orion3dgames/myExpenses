@@ -61,7 +61,7 @@ angular.module('starter.controllers', [])
 
                 $rootScope.show('Registering...');
                 
-                var auth = $firebaseAuth(fireBaseData.ref());
+                var auth = $firebaseAuth(fb);
                 auth.$createUser(email, password).then(function (error) {
                     console.log("User created successfully!");
                     return auth.$authWithPassword({
